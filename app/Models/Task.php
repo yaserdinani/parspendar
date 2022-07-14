@@ -16,5 +16,8 @@ class Task extends Model
         'started_at',
         'finished_at',
     ];
-    
+
+    public function users(){
+        return $this->belongsToMany(User::class,'task_user');
+    }
 }
