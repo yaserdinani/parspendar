@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/auth',[App\Http\Controllers\panel\AuthController::class,'index'])->name('auth.index');
+Route::post('/auth/login',[App\Http\Controllers\panel\AuthController::class,'login'])->name('auth.login');
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group(["middleware"=>"auth"],function(){
+    Route::get('/',[App\Http\Controllers\panel\DashboardController::class,'index'])->name('dashboard');
+    Route::get('/users',[App\Http\Controllers\panel\UserController::class,'index'])->name('users.index');
 });

@@ -1,0 +1,8 @@
+@import url(login.css);
+@font-face {
+    font-family: "Peyda";
+    src: url("/../fonts/PEYDA-BOLD.ttf");
+}
+*{
+    font-family: "Peyda";
+}
