@@ -171,6 +171,19 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(auth()->user()->is_admin){
+            $user = User::find($id);
+            $user->delete();
+            return[
+                "success"=>true,
+                "message"=>"کاربر با موفقیت حذف گردید"
+            ];
+        }
+        else{
+            return[
+                "success"=>false,
+                "message"=>"شما دسترسی لازم برای این عملیات را ندارید"
+            ];
+        }
     }
 }
