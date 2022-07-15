@@ -83,15 +83,19 @@ class UserController extends Controller
     public function show($id)
     {
         if(auth()->user()->is_admin){
+            $user = User::find($id);
             return [
                 "success"=>true,
-                "data"=>User::find($id)
+                "data"=>$user,
+                "tasks"=>$user->tasks()->get()
             ];
         }
         else if(auth()->user()->id==$id){
+            $user = User::find($id);
             return [
                 "success"=>true,
-                "data"=>User::find($id)
+                "data"=>$user,
+                "tasks"=>$user->tasks()->get()
             ];
         }
         else{
