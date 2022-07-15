@@ -21,5 +21,5 @@ Route::group(["middleware"=>"auth"],function(){
 });
 
 Route::group(["middleware"=>"admin"],function(){
-    Route::get('/users',[App\Http\Controllers\panel\UserController::class,'index'])->name('users.index');
+    Route::resource('users',App\Http\Controllers\panel\UserController::class);
 });

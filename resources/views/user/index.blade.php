@@ -6,7 +6,7 @@
       <h3>کاربران</h3>
       <div class="d-flex flex-row justify-content-between">
           <div>
-            <a href="" class="btn btn-success">افزودن</a>
+            <a href="{{route('users.create')}}" class="btn btn-success">افزودن</a>
           </div>
           <div>
             <input type="text" class="form-control text-right" placeholder="جستجو">

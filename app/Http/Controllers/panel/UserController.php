@@ -5,6 +5,7 @@ namespace App\Http\Controllers\panel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -27,7 +28,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('user.create');
     }
 
     /**
@@ -38,7 +39,23 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+            "name"=>["required", "min:3","max:30"],
+            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
+            "email"=>["required","email"],
+            "password"=>["required","confirmed"],
+            "role"=>["required","in:0,1"]
+        ]);
+
+        User::create([
+            "name"=>$request->name,
+            "phone"=>$request->phone,
+            "email"=>$request->email,
+            "password"=>Hash::make($request->password),
+            "is_admin"=>($request->role == 0) ? false : true
+        ]);
+
+        return redirect()->route('users.index');
     }
 
     /**
