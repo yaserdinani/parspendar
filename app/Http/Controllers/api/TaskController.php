@@ -216,6 +216,28 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $task = Task::find($id);
+        if(auth()->user()->is_admin){
+            $task->users()->detach($task->users()->get());
+            $task->delete();
+            return [
+                "success" =>true,
+                "message" => "وظیفه با موفقیت حذف گردید"
+            ];
+        }
+        else if($task->users()->where('user_id',auth()->user()->id)->exists()){
+            $task->users()->detach($task->users()->get());
+            $task->delete();
+            return [
+                "success" =>true,
+                "message" => "وظیفه با موفقیت حذف گردید"
+            ];
+        }
+        else{
+            return [
+                "success" =>false,
+                "message" => "شما دسترسی لازم برای انجام این عملیات را ندارید"
+            ];
+        }
     }
 }
