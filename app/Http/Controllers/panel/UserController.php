@@ -66,7 +66,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -75,9 +75,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        return view('user.edit')->with("user",$user);
     }
 
     /**
@@ -87,9 +87,25 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $this->validate($request,[
+            "name"=>["required", "min:3","max:30"],
+            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
+            "email"=>["required","email"],
+            "password"=>["confirmed"],
+            "role"=>["required","in:0,1"]
+        ]);
+
+        $user->update([
+            "name"=>$request->name,
+            "email"=>$request->email,
+            "phone"=>$request->phone,
+            "password"=>(isset($request->password) ? Hash::make($request->password) : $user->password),
+            "is_admin"=>($request->role == 0) ? false : true
+        ]);
+
+        return redirect()->route('users.index');
     }
 
     /**
@@ -98,8 +114,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return redirect()->back();
     }
 }

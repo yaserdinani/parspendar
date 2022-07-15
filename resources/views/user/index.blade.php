@@ -49,10 +49,14 @@
                         @endif
                     </td>
                     <td>
-                        <a href="" class="btn btn-sm btn-outline-warning">ویرایش</a>
+                        <a href="{{route('users.edit',$user)}}" class="btn btn-sm btn-outline-warning">ویرایش</a>
                     </td>
                     <td>
-                        <a href="" class="btn btn-sm btn-outline-danger">حذف</a>
+                        <form action="{{route('users.destroy',$user)}}" method="post">
+                            @csrf
+                            @method('delete')
+                            <button type="submit" class="btn btn-sm btn-outline-danger">حذف</button>
+                        </form>
                     </td>
                 </tr>
               @endforeach
