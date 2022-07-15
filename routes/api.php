@@ -18,4 +18,5 @@ Route::post('/login',[App\Http\Controllers\api\AuthController::class,'login']);
 
 Route::group(["middleware"=>"jwt.verify"],function(){
     Route::post('/logout',[App\Http\Controllers\api\AuthController::class,'logout']);
+    Route::get('/users',[App\Http\Controllers\api\UserController::class,'index']);
 });
