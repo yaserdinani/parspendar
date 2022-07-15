@@ -30,4 +30,5 @@ Route::group(["middleware"=>"jwt.verify"],function(){
     Route::post('/tasks/create',[App\Http\Controllers\api\TaskController::class,'store']);
     Route::put('/tasks/{id}/update',[App\Http\Controllers\api\TaskController::class,'update']);
     Route::delete('/tasks/{id}/delete',[App\Http\Controllers\api\TaskController::class,'destroy']);
+    Route::post('/task/filter',[App\Http\Controllers\api\TaskController::class,'filter']);
 });

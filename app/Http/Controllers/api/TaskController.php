@@ -240,4 +240,53 @@ class TaskController extends Controller
             ];
         }
     }
+
+    public function filter(Request $request){
+            if(auth()->user()->is_admin){
+                if(isset($request->status)){
+                    $tasks = Task::select("*")->where("status","=",$request->status)->get();
+                    return[
+                        "success"=>true,
+                        "data"=>$tasks
+                    ];
+                }
+                else if (isset($request->started_at) && isset($request->finished_at)){
+                    $tasks = Task::select("*")
+                    ->where("started_at",">=",$request->started_at)
+                    ->where("finished_at","<=",$request->finished_at)
+                    ->get();
+                    return[
+                        "success"=>true,
+                        "data"=>$tasks
+                    ];
+                }
+                else if(isset($request->started_at)){
+                    $tasks = Task::select("*")->where("started_at",">=",$request->started_at)->get();
+                    return[
+                        "success"=>true,
+                        "data"=>$tasks
+                    ];
+                }
+                else if(isset($request->finished_at)){
+                    $tasks = Task::select("*")->where("finished_at",">=",$request->finished_at)->get();
+                    return[
+                        "success"=>true,
+                        "data"=>$tasks
+                    ];
+                }
+                else{
+                    $tasks = Task::all();
+                    return[
+                        "success"=>true,
+                        "data"=>$tasks
+                    ];
+                }
+            }
+            else{
+                return [
+                    "success"=>false,
+                    "message"=>"شما دسترسی لازم برای این کار را ندارید"
+                ];
+            }
+    }
 }

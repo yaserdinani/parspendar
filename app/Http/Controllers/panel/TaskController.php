@@ -198,7 +198,7 @@ class TaskController extends Controller
         else if (isset($request->filter_started_at) && isset($request->filter_finished_at)){
             $tasks = Task::select("*")
             ->where("started_at",">=",$request->filter_started_at)
-            ->orWhere("finished_at","<=",$request->filter_finished_at)
+            ->where("finished_at","<=",$request->filter_finished_at)
             ->paginate();
             return view("task.index")->with("tasks",$tasks);
         }
