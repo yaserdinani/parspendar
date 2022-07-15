@@ -27,4 +27,5 @@ Route::group(["middleware"=>"jwt.verify"],function(){
     // task routes
     Route::get('/tasks',[App\Http\Controllers\api\TaskController::class,'index']);
     Route::get('/tasks/{id}',[App\Http\Controllers\api\TaskController::class,'show']);
+    Route::post('/tasks/create',[App\Http\Controllers\api\TaskController::class,'store']);
 });
