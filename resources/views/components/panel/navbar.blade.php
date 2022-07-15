@@ -8,9 +8,11 @@
         <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'dashboard') ? 'active' : ''}}">
             <a class="nav-link" href="{{route('dashboard')}}">داشبورد</a>
         </li>
-        <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'users.index') ? 'active' : ''}}">
-            <a class="nav-link" href="{{route('users.index')}}">کاربران</a>
-        </li>
+        @if(auth()->user()->is_admin)
+            <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'users.index') ? 'active' : ''}}">
+                <a class="nav-link" href="{{route('users.index')}}">کاربران</a>
+            </li>
+        @endif
         {{-- <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'tasks.index') ? 'active' : ''}}">
             <a class="nav-link" href="{{route('tasks.index')}}">اتاق‌ها</a>
         </li> --}}

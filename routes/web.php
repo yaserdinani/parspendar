@@ -17,6 +17,9 @@ Route::post('/auth/login',[App\Http\Controllers\panel\AuthController::class,'log
 
 Route::group(["middleware"=>"auth"],function(){
     Route::get('/',[App\Http\Controllers\panel\DashboardController::class,'index'])->name('dashboard');
-    Route::get('/users',[App\Http\Controllers\panel\UserController::class,'index'])->name('users.index');
     Route::get('/auth/logout',[App\Http\Controllers\panel\AuthController::class,'logout'])->name('auth.logout');
+});
+
+Route::group(["middleware"=>"admin"],function(){
+    Route::get('/users',[App\Http\Controllers\panel\UserController::class,'index'])->name('users.index');
 });
