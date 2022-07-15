@@ -9,7 +9,21 @@
             <a href="{{route('tasks.create')}}" class="btn btn-success">افزودن</a>
           </div>
           <div>
-            <input type="text" class="form-control text-right" placeholder="جستجو">
+              <form action="{{route('tasks.filter')}}" class="d-flex align-items-center" method="post">
+                    @csrf
+                    <button type="submit" class="btn btn-primary mx-1">جستجو</button>
+                    <input type="date" class="form-control text-right mx-1" name="filter_finished_at" id="filter_finished_at" autocomplete="off">
+                    <label for="filter_finished_at">پایان</label>
+                    <input type="date" class="form-control text-right mx-1" name="filter_started_at" id="filter_started_at" autocomplete="off">
+                    <label for="filter_started_at">شروع</label>
+                    <select id="role" class="form-control text-right mx-1" name="filter_option">
+                        <option selected disabled>انتخاب کنید</option>
+                        <option value="0">انجام نشده</option>
+                        <option value="1">در حال انجام</option>
+                        <option value="2">انجام شده</option>
+                    </select>
+                    <input type="text" class="form-control text-right mx-1" name="filter_text" placeholder="جستجو" autocomplete="off">
+              </form>
           </div>
       </div>
     </div>

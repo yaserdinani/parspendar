@@ -184,4 +184,35 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->route('tasks.index');
     }
+
+    public function filter(Request $request){
+        if(isset($request->filter_text)){
+            $tasks = Task::select("*")->where("name","LIKE","%".$request->filter_text."%")
+            ->orWhere("description","LIKE","%".$request->filter_text."%")->paginate();
+            return view("task.index")->with("tasks",$tasks);
+        }
+        else if(isset($request->filter_option)){
+            $tasks = Task::select("*")->where("status","=",$request->filter_option)->paginate();
+            return view("task.index")->with("tasks",$tasks);
+        }
+        else if (isset($request->filter_started_at) && isset($request->filter_finished_at)){
+            $tasks = Task::select("*")
+            ->where("started_at",">=",$request->filter_started_at)
+            ->orWhere("finished_at","<=",$request->filter_finished_at)
+            ->paginate();
+            return view("task.index")->with("tasks",$tasks);
+        }
+        else if(isset($request->filter_started_at)){
+            $tasks = Task::select("*")->where("started_at",">=",$request->filter_started_at)->paginate();
+            return view("task.index")->with("tasks",$tasks);
+        }
+        else if(isset($request->filter_finished_at)){
+            $tasks = Task::select("*")->where("finished_at",">=",$request->filter_finished_at)->paginate();
+            return view("task.index")->with("tasks",$tasks);
+        }
+        else{
+            $tasks = Task::paginate();
+            return view("task.index")->with("tasks",$tasks);
+        }
+    }
 }

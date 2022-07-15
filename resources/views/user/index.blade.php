@@ -11,8 +11,8 @@
           <div>
             <form action="{{route('users.filter')}}" method="post" class="d-flex">
                 @csrf
-                <button type="submit" class="btn btn-primary">جستجو</button>
-                <input type="text" class="form-control text-right" name="filter" placeholder="جستجو">
+                <button type="submit" class="btn btn-primary mx-1">جستجو</button>
+                <input type="text" class="form-control text-right mx-1" name="filter" placeholder="جستجو" autocomplete="off">
             </form>
           </div>
       </div>
