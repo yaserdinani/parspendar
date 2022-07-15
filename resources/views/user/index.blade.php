@@ -9,7 +9,11 @@
             <a href="{{route('users.create')}}" class="btn btn-success">افزودن</a>
           </div>
           <div>
-            <input type="text" class="form-control text-right" placeholder="جستجو">
+            <form action="{{route('users.filter')}}" method="post" class="d-flex">
+                @csrf
+                <button type="submit" class="btn btn-primary">جستجو</button>
+                <input type="text" class="form-control text-right" name="filter" placeholder="جستجو">
+            </form>
           </div>
       </div>
     </div>

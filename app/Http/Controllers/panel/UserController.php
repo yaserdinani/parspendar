@@ -119,4 +119,13 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('users.index');
     }
+
+    public function filter(Request $request){
+        $users = User::select("*")
+        ->where("name","LIKE","%".$request->filter."%")
+        ->orWhere("email","LIKE","%".$request->filter."%")
+        ->orWhere("phone","LIKE","%".$request->filter."%")->paginate();
+
+        return view('user.index')->with('users', $users);
+    }
 }

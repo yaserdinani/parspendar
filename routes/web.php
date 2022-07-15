@@ -23,4 +23,5 @@ Route::group(["middleware"=>"auth"],function(){
 
 Route::group(["middleware"=>"admin"],function(){
     Route::resource('users',App\Http\Controllers\panel\UserController::class);
+    Route::post('/users/filter',[App\Http\Controllers\panel\UserController::class,"filter"])->name('users.filter');
 });
