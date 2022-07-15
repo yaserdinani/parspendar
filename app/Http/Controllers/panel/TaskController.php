@@ -50,7 +50,6 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $this->validate($request,[
             "name"=>["required", "min:3","max:30"],
             "status"=>["required", "in:0,1,2"],
@@ -102,9 +101,9 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Task $task)
     {
-        //
+        return view('task.show')->with("task",$task);
     }
 
     /**
@@ -115,7 +114,9 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        $users = User::all();
+
+        return view('task.edit',["users"=>$users,"task"=>$task]);
     }
 
     /**
@@ -127,7 +128,48 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $this->validate($request,[
+            "name"=>["required", "min:3","max:30"],
+            "status"=>["required", "in:0,1,2"],
+            "started_at"=>["required", "date","after:yesterday","before:finished_at"],
+            "finished_at"=>["required", "date","after:started_at"],
+        ]);
+
+        if(auth()->user()->is_admin){
+            if(isset($request->users)){
+                $task->update([
+                    "name"=>$request->name,
+                    "description"=>$request->description,
+                    "status"=>$request->status,
+                    "started_at"=>$request->started_at,
+                    "finished_at"=>$request->finished_at
+                ]);
+                $task->users()->detach($task->users()->get());
+                $task->users()->attach(User::find($request->users));
+                return redirect()->route('tasks.index');
+
+            }
+            else{
+                $task->update([
+                    "name"=>$request->name,
+                    "description"=>$request->description,
+                    "status"=>$request->status,
+                    "started_at"=>$request->started_at,
+                    "finished_at"=>$request->finished_at
+                ]);
+                return redirect()->route('tasks.index');
+            }
+        }
+        else{
+            $task->update([
+                "name"=>$request->name,
+                "description"=>$request->description,
+                "status"=>$request->status,
+                "started_at"=>$request->started_at,
+                "finished_at"=>$request->finished_at
+            ]);
+            return redirect()->route('tasks.index');
+        }
     }
 
     /**
@@ -138,6 +180,8 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->users()->detach($task->users()->get());
+        $task->delete();
+        return redirect()->route('tasks.index');
     }
 }
