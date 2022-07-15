@@ -1,17 +1,9 @@
 @extends('layouts.app')
-@section('title', 'کاربران')
+@section('title', 'پروفایل کاربر')
 @section('content')
 <div class="card">
-    <div class="card-header">
-      <h3>کاربران</h3>
-      <div class="d-flex flex-row justify-content-between">
-          <div>
-            <a href="{{route('users.create')}}" class="btn btn-success">افزودن</a>
-          </div>
-          <div>
-            <input type="text" class="form-control text-right" placeholder="جستجو">
-          </div>
-      </div>
+    <div class="card-header text-center">
+      <h3>{{$user->name}} پروفایل کاربری</h3>
     </div>
     <div class="card-body">
         <table class="table table-bordered" dir="rtl">
@@ -29,7 +21,6 @@
               </tr>
             </thead>
             <tbody>
-              @foreach($users as $user)
                 <tr>
                     <th scope="row">{{$user->id}}</th>
                     <td>{{$user->name}}</td>
@@ -63,10 +54,8 @@
                         </form>
                     </td>
                 </tr>
-              @endforeach
             </tbody>
         </table>
-        {{ $users->links() }}
     </div>
 </div>
 @endsection
