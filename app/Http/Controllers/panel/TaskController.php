@@ -5,6 +5,7 @@ namespace App\Http\Controllers\panel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
 
 class TaskController extends Controller
 {
@@ -32,7 +33,13 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        if(auth()->user()->is_admin){
+            $users = User::all();
+            return view('task.create')->with('users', $users);
+        }
+        else{
+            return view('task.create');
+        }
     }
 
     /**
@@ -43,7 +50,50 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $this->validate($request,[
+            "name"=>["required", "min:3","max:30"],
+            "status"=>["required", "in:0,1,2"],
+            "started_at"=>["required", "date","after:yesterday","before:finished_at"],
+            "finished_at"=>["required", "date","after:started_at"],
+        ]);
+        
+        if(auth()->user()->is_admin){
+            if(isset($request->users)){
+                $task = Task::create([
+                    "name"=>$request->name,
+                    "description"=>$request->description,
+                    "status"=>$request->status,
+                    "started_at"=>$request->started_at,
+                    "finished_at"=>$request->finished_at
+                ]);
+                $users = User::find($request->users);
+                $task->users()->attach($users);
+                return redirect()->route('tasks.index');
+            }
+            else{
+                $task = Task::create([
+                    "name"=>$request->name,
+                    "description"=>$request->description,
+                    "status"=>$request->status,
+                    "started_at"=>$request->started_at,
+                    "finished_at"=>$request->finished_at
+                ]);
+                return redirect()->route('tasks.index');
+            }
+        }
+        else{
+            $task = Task::create([
+                "name"=>$request->name,
+                "description"=>$request->description,
+                "status"=>$request->status,
+                "started_at"=>$request->started_at,
+                "finished_at"=>$request->finished_at
+            ]);
+
+            $task->users()->attach(auth()->user());
+            return redirect()->route('tasks.index');
+        }
     }
 
     /**
