@@ -13,9 +13,9 @@
                 <a class="nav-link" href="{{route('users.index')}}">کاربران</a>
             </li>
         @endif
-        {{-- <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'tasks.index') ? 'active' : ''}}">
-            <a class="nav-link" href="{{route('tasks.index')}}">اتاق‌ها</a>
-        </li> --}}
+        <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'tasks.index') ? 'active' : ''}}">
+            <a class="nav-link" href="{{route('tasks.index')}}">همه‌ی وظایف</a>
+        </li>
       </ul>
       <a class="btn btn-outline-danger" href="{{route('auth.logout')}}">خروج</a>
     </div>
