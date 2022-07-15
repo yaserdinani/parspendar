@@ -30,4 +30,23 @@ class AuthController extends Controller
             ];
         }
     }
+
+    public function logout(Request $request){
+        $result = $this->validate($request,[
+            'token'=>['required']
+        ]);
+        if($result){
+            JWTAuth::invalidate($request->token);
+            return [
+                "sucees"=>true,
+                "message"=>"شما با موفقیت خارج شدید"
+            ];
+        }
+        else{
+            return [
+                "sucees"=>false,
+                "message"=>"اطلاعات ورودی نامعتبر است"
+            ];
+        }
+    }
 }
