@@ -50,10 +50,10 @@
                         @endswitch
                     </td>
                     <td>
-                        {{$task->started_at}}
+                        {{\Morilog\Jalali\Jalalian::forge($task->started_at)->format('%A %d %B %Y')}}
                     </td>
                     <td>
-                        {{$task->finished_at}}
+                        {{\Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y')}}
                     </td>
                     <td>
                         <a href="{{route('tasks.edit',$task)}}" class="btn btn-sm btn-outline-warning">ویرایش</a>
