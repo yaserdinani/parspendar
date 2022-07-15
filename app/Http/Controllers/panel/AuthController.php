@@ -12,7 +12,7 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-        
+
         $this->validate($request,[
             'phone'=>['required','regex:/^(\+98|0)?9\d{9}$/u'],
             'password'=>['required']
@@ -25,5 +25,11 @@ class AuthController extends Controller
         else{
             return redirect()->route('dashboard');
         }
+    }
+
+    public function logout(){
+        auth()->logout();
+
+        return redirect()->route('auth.index');
     }
 }

@@ -9,6 +9,9 @@
     <title>@yield('title') - پارس پندار</title>
 </head>
 <body>
+    <div class="container-fluid">
+        <x-panel.navbar />
+    </div>
     <div class="container">
         @yield('content')
     </div>
