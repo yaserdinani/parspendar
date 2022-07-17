@@ -15,7 +15,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson() && Auth::user()->is_active) {
+        if (! $request->expectsJson()) {
             return route('auth.index');
         }
     }
