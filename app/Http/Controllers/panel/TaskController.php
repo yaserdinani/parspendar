@@ -122,30 +122,18 @@ class TaskController extends Controller
             "finished_at"=>["required", "date","after:started_at"],
         ]);
 
-        if(auth()->user()->is_admin){
-            if(isset($request->users)){
-                $task->update([
-                    "name"=>$request->name,
-                    "description"=>$request->description,
-                    "status"=>$request->status,
-                    "started_at"=>$request->started_at,
-                    "finished_at"=>$request->finished_at
-                ]);
-                $task->users()->detach($task->users()->get());
-                $task->users()->attach(User::find($request->users));
-                return redirect()->route('tasks.index');
+        if(isset($request->users)){
+            $task->update([
+                "name"=>$request->name,
+                "description"=>$request->description,
+                "status"=>$request->status,
+                "started_at"=>$request->started_at,
+                "finished_at"=>$request->finished_at
+            ]);
+            $task->users()->detach($task->users()->get());
+            $task->users()->attach(User::find($request->users));
+            return redirect()->route('tasks.index');
 
-            }
-            else{
-                $task->update([
-                    "name"=>$request->name,
-                    "description"=>$request->description,
-                    "status"=>$request->status,
-                    "started_at"=>$request->started_at,
-                    "finished_at"=>$request->finished_at
-                ]);
-                return redirect()->route('tasks.index');
-            }
         }
         else{
             $task->update([

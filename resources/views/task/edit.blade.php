@@ -14,11 +14,17 @@
                     <label for="description">توضیحات</label>
                     <textarea class="form-control text-right" id="description" name="description" rows="3" required>
                         {{$task->description}}    
-                    </textarea>                
+                    </textarea>
+                    @error('description')
+                      <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror              
                 </div>
               <div class="form-group col-md-6 text-right">
                 <label for="name">نام</label>
                 <input type="text" class="form-control text-right" name="name" id="name" placeholder="نام" required autocomplete="off" value="{{$task->name}}">
+                @error('name')
+                  <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
               </div>
             </div>
             <div class="form-row">
@@ -39,19 +45,28 @@
                       <option value="1" {{($task->status ==1) ? 'selected' : ''}}>در حال انجام</option>
                       <option value="2" {{($task->status ==2) ? 'selected' : ''}}>انجام شده</option>
                     </select>
+                    @error('role')
+                      <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
             <div class="form-row">
               <div class="form-group col-md-6 text-right">
                 <label for="finished_at">پایان</label>
                 <input type="date" class="form-control text-right" name="finished_at" id="finished_at"  required autocomplete="off" value="{{date('Y-m-d', strtotime($task->finished_at))}}">
+                @error('finished_at')
+                  <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
               </div>
               <div class="form-group col-md-6 text-right">
                 <label for="started_at">شروع</label>
                 <input type="date" class="form-control text-right" name="started_at" id="started_at"  required autocomplete="off" value="{{date('Y-m-d', strtotime($task->started_at))}}">
+                @error('started_at')
+                  <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
               </div>
             </div>
-            <button type="submit" class="btn btn-success">افزودن</button>
+            <button type="submit" class="btn btn-success" onclick="return confirm('آیا از ویرایش این وظیفه اطمینان دارید؟')">ویرایش</button>
         </form>
     </div>
 </div>
