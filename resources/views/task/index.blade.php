@@ -39,7 +39,9 @@
                 <th scope="col">تاریخ پایان</th>
                 <th scope="col">ویرایش</th>
                 <th scope="col">نمایش</th>
+                @if(auth()->user()->is_admin)
                 <th scope="col">حذف</th>
+                @endif
               </tr>
             </thead>
             <tbody>
@@ -75,13 +77,15 @@
                     <td>
                         <a href="{{route('tasks.show',$task)}}" class="btn btn-sm btn-outline-info">نمایش</a>
                     </td>
-                    <td>
-                        <form action="{{route('tasks.destroy',$task)}}" method="post">
-                            @csrf
-                            @method('delete')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">حذف</button>
-                        </form>
-                    </td>
+                    @if(auth()->user()->is_admin)
+                        <td>
+                            <form action="{{route('tasks.destroy',$task)}}" method="post">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('آیا از حذف این وظیفه اطمینان دارید؟')">حذف</button>
+                            </form>
+                        </td>
+                    @endif
                 </tr>
               @endforeach
             </tbody>
