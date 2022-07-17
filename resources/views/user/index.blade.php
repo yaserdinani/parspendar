@@ -63,7 +63,7 @@
                         <form action="{{route('users.destroy',$user)}}" method="post">
                             @csrf
                             @method('delete')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">حذف</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('آیا از حذف این کاربر اطمینان دارید؟')">حذف</button>
                         </form>
                     </td>
                 </tr>
