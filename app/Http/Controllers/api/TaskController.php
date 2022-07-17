@@ -95,25 +95,33 @@ class TaskController extends Controller
     public function show($id)
     {
         $task = Task::find($id);
-        if(auth()->user()->is_admin){
-            return [
-                "success"=>true,
-                "data"=>$task,
-                "users"=>$task->users()->get()
-            ];
-        }
-        else if($task->users()->where('user_id',auth()->user()->id)->exists()){
-            return [
-                "success"=>true,
-                "data"=>$task,
-                "users"=>$task->users()->get()
-            ];
+        if($task){
+            if(auth()->user()->is_admin){
+                return response([
+                    "success"=>true,
+                    "data"=>$task,
+                    "users"=>$task->users()->get()
+                ],200);
+            }
+            else if($task->users()->where('user_id',auth()->user()->id)->exists()){
+                return response([
+                    "success"=>true,
+                    "data"=>$task,
+                    "users"=>$task->users()->get()
+                ],200);
+            }
+            else{
+                return response([
+                    "success"=>false,
+                    "message"=>"شما دسترسی لازم برای این عملیات را ندارید"
+                ],403);
+            }
         }
         else{
-            return [
+            return response([
                 "success"=>false,
-                "message"=>"شما دسترسی لازم برای این عملیات را ندارید"
-            ];
+                "message"=>"وظیفه یافت نشد"
+            ],404);
         }
     }
 
@@ -126,15 +134,21 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $result = $this->validate($request,[
+        $validator = Validator::make($request->all(),[
             "name"=>["required", "min:3","max:30"],
             "status"=>["required", "in:0,1,2"],
             "started_at"=>["required", "date","after:yesterday","before:finished_at"],
             "finished_at"=>["required", "date","after:started_at"],
         ]);
-        if($result){
+        if($validator->fails()){
+            return response([
+                "success"=>false,
+                "message"=>"اطلاعات ورودی اشتباه است"
+            ],400);
+        }
+        else{
             $task = Task::find($id);
-            if(auth()->user()->is_admin){
+            if($task){
                 if(isset($request->users)){
                     $task->update([
                         "name"=>$request->name,
@@ -145,11 +159,11 @@ class TaskController extends Controller
                     ]);
                     $task->users()->detach($task->users()->get());
                     $task->users()->attach(User::find(json_decode($request->users)));
-                    return [
+                    return response([
                         "success"=>true,
                         "message"=>"وظیفه با موفقیت ویرایش گردید",
                         "data"=>$task
-                    ];
+                    ],200);
     
                 }
                 else{
@@ -160,35 +174,21 @@ class TaskController extends Controller
                         "started_at"=>$request->started_at,
                         "finished_at"=>$request->finished_at
                     ]);
-                    return [
+                    return response([
                         "success"=>true,
                         "message"=>"وظیفه با موفقیت ویرایش گردید",
                         "data"=>$task
-                    ];
+                    ],200);
                 }
             }
             else{
-                $task->update([
-                    "name"=>$request->name,
-                    "description"=>$request->description,
-                    "status"=>$request->status,
-                    "started_at"=>$request->started_at,
-                    "finished_at"=>$request->finished_at
-                ]);
-                return [
-                    "success"=>true,
-                    "message"=>"وظیفه با موفقیت ویرایش گردید",
-                    "data"=>$task
-                ];
+                return response([
+                    "success"=>false,
+                    "message"=>"وظیفه یافت نشد"
+                ],404);
             }
+
         }
-        else{
-            return [
-                "success"=>false,
-                "message"=>"اطلاعات ورودی نادرست است"
-            ];
-        }
-        
     }
 
     /**
@@ -200,76 +200,60 @@ class TaskController extends Controller
     public function destroy($id)
     {
         $task = Task::find($id);
-        if(auth()->user()->is_admin){
+        if($task){
             $task->users()->detach($task->users()->get());
             $task->delete();
-            return [
+            return response([
                 "success" =>true,
                 "message" => "وظیفه با موفقیت حذف گردید"
-            ];
-        }
-        else if($task->users()->where('user_id',auth()->user()->id)->exists()){
-            $task->users()->detach($task->users()->get());
-            $task->delete();
-            return [
-                "success" =>true,
-                "message" => "وظیفه با موفقیت حذف گردید"
-            ];
+            ],200);
         }
         else{
-            return [
-                "success" =>false,
-                "message" => "شما دسترسی لازم برای انجام این عملیات را ندارید"
-            ];
+            return response([
+                "success"=>false,
+                "message"=>"وظیفه یافت نشد"
+            ],404);
         }
     }
 
     public function filter(Request $request){
-            if(auth()->user()->is_admin){
-                if(isset($request->status)){
-                    $tasks = Task::select("*")->where("status","=",$request->status)->get();
-                    return[
-                        "success"=>true,
-                        "data"=>$tasks
-                    ];
-                }
-                else if (isset($request->started_at) && isset($request->finished_at)){
-                    $tasks = Task::select("*")
-                    ->where("started_at",">=",$request->started_at)
-                    ->where("finished_at","<=",$request->finished_at)
-                    ->get();
-                    return[
-                        "success"=>true,
-                        "data"=>$tasks
-                    ];
-                }
-                else if(isset($request->started_at)){
-                    $tasks = Task::select("*")->where("started_at",">=",$request->started_at)->get();
-                    return[
-                        "success"=>true,
-                        "data"=>$tasks
-                    ];
-                }
-                else if(isset($request->finished_at)){
-                    $tasks = Task::select("*")->where("finished_at",">=",$request->finished_at)->get();
-                    return[
-                        "success"=>true,
-                        "data"=>$tasks
-                    ];
-                }
-                else{
-                    $tasks = Task::all();
-                    return[
-                        "success"=>true,
-                        "data"=>$tasks
-                    ];
-                }
-            }
-            else{
-                return [
-                    "success"=>false,
-                    "message"=>"شما دسترسی لازم برای این کار را ندارید"
-                ];
-            }
+        if(isset($request->status)){
+            $tasks = Task::select("*")->where("status","=",$request->status)->get();
+            return response([
+                "success"=>true,
+                "data"=>$tasks
+            ],200);
+        }
+        else if (isset($request->started_at) && isset($request->finished_at)){
+            $tasks = Task::select("*")
+            ->where("started_at",">=",$request->started_at)
+            ->where("finished_at","<=",$request->finished_at)
+            ->get();
+            return response([
+                "success"=>true,
+                "data"=>$tasks
+            ],200);
+        }
+        else if(isset($request->started_at)){
+            $tasks = Task::select("*")->where("started_at",">=",$request->started_at)->get();
+            return response([
+                "success"=>true,
+                "data"=>$tasks
+            ],200);
+        }
+        else if(isset($request->finished_at)){
+            $tasks = Task::select("*")->where("finished_at",">=",$request->finished_at)->get();
+            return response([
+                "success"=>true,
+                "data"=>$tasks
+            ],200);
+        }
+        else{
+            $tasks = Task::all();
+            return response([
+                "success"=>true,
+                "data"=>$tasks
+            ],200);
+        }
     }
 }
