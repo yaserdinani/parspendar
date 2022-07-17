@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Models\User;
+use Validator;
 
 class TaskController extends Controller
 {
@@ -17,16 +18,16 @@ class TaskController extends Controller
     public function index()
     {
         if(auth()->user()->is_admin){
-            return [
+            return response([
                 "success"=>true,
                 "data"=>Task::all(),
-            ];
+            ],200);
         }
         else{
-            return [
+            return response([
                 "success"=>true,
                 "data"=>auth()->user()->tasks()->get(),
-            ];
+            ],200);
         }
     }
 
@@ -38,45 +39,34 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $result = $this->validate($request,[
+        $validator = Validator::make($request->all(),[
             "name"=>["required", "min:3","max:30"],
             "status"=>["required", "in:0,1,2"],
             "started_at"=>["required", "date","after:yesterday","before:finished_at"],
             "finished_at"=>["required", "date","after:started_at"],
         ]);
-
-        if($result){
-            if(auth()->user()->is_admin){
-                if(isset($request->users)){
-                    $task = Task::create([
-                        "name"=>$request->name,
-                        "description"=>$request->description,
-                        "status"=>$request->status,
-                        "started_at"=>$request->started_at,
-                        "finished_at"=>$request->finished_at
-                    ]);
-                    $users = User::find(json_decode($request->users));
-                    $task->users()->attach($users);
-                    return [
-                        "success"=>true,
-                        "message"=>"وظیفه با موفقیت اضافه گردید",
-                        "data"=>$task
-                    ];
-                }
-                else{
-                    $task = Task::create([
-                        "name"=>$request->name,
-                        "description"=>$request->description,
-                        "status"=>$request->status,
-                        "started_at"=>$request->started_at,
-                        "finished_at"=>$request->finished_at
-                    ]);
-                    return [
-                        "success"=>true,
-                        "message"=>"وظیفه با موفقیت اضافه گردید",
-                        "data"=>$task
-                    ];
-                }
+        if($validator->fails()){
+            return response([
+                "success"=>false,
+                "message"=>"اطلاعات ورودی اشتباه است"
+            ],400);
+        }
+        else{
+            if(isset($request->users)){
+                $task = Task::create([
+                    "name"=>$request->name,
+                    "description"=>$request->description,
+                    "status"=>$request->status,
+                    "started_at"=>$request->started_at,
+                    "finished_at"=>$request->finished_at
+                ]);
+                $users = User::find(json_decode($request->users));
+                $task->users()->attach($users);
+                return response([
+                    "success"=>true,
+                    "message"=>"وظیفه با موفقیت اضافه گردید",
+                    "data"=>$task
+                ],200);
             }
             else{
                 $task = Task::create([
@@ -86,20 +76,13 @@ class TaskController extends Controller
                     "started_at"=>$request->started_at,
                     "finished_at"=>$request->finished_at
                 ]);
-    
                 $task->users()->attach(auth()->user());
-                return [
+                return response([
                     "success"=>true,
                     "message"=>"وظیفه با موفقیت اضافه گردید",
                     "data"=>$task
-                ];
+                ],200);
             }
-        }
-        else{
-            return [
-                "success"=>false,
-                "message"=>"اطلاعات وارد شده نادرست است"
-            ];
         }
     }
 
