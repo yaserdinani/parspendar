@@ -17,9 +17,23 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user() &&  Auth::user()->is_admin && Auth::user()->is_active) {
-            return $next($request);
+        if ($request->header('Authorization')) {
+            if (Auth::user() &&  Auth::user()->is_admin && Auth::user()->is_active) {
+                return $next($request);
+            }
+            else{
+                return response([
+                    "status" =>false,
+                    "message" =>"شما دسترسی لازم را ندارید"
+                ],403);
+            }
+        } else {
+            if (Auth::user() &&  Auth::user()->is_admin && Auth::user()->is_active) {
+                return $next($request);
+            }
+            else{
+                return redirect('/');
+            }
         }
-        return redirect('/');
     }
 }

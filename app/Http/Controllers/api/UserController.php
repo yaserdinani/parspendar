@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Validator;
 
 class UserController extends Controller
 {
@@ -15,18 +16,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        if(auth()->user()->is_admin){
-            return [
-                "sucees"=>true,
-                "data"=>User::all()
-            ];
-        }
-        else{
-            return [
-                "sucees"=>false,
-                "data"=>"شما دسترسی لازم برای دریافت اطلاعات را ندارید"
-            ];
-        }
+        return response([
+            "sucees"=>true,
+            "data"=>User::all()
+        ],200);
     }
 
     /**
@@ -37,40 +30,33 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if(auth()->user()->is_admin){
-            $result = $this->validate($request,[
-                "name"=>["required", "min:3","max:30"],
-                "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
-                "email"=>["required","email"],
-                "password"=>["required","confirmed"],
-            ]);
-            if($result){
-                $user = User::create([
-                    "name"=>$request->name,
-                    "email"=>$request->email,
-                    "phone"=>$request->phone,
-                    "password"=>$request->password,
-                    "is_active"=>($request->is_active == 1) ? true : false,
-                    "is_admin"=>($request->is_admin == 1) ? true : false,
-                ]);
-                return [
-                    "success"=>true,
-                    "message"=>"کاربر با موفقیت اضافه گردید",
-                    "data"=>$user
-                ];
-            }
-            else{
-                return [
-                    "sucees"=>false,
-                    "data"=>"اطلاعات ورودی اشتباه است"
-                ];
-            }
+        $validator = Validator::make($request->all(),[
+            "name"=>["required", "min:3","max:30"],
+            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
+            "email"=>["required","email"],
+            "password"=>["required","confirmed"],
+        ]);
+        if($validator->fails()){
+            return response([
+                "success"=>false,
+                "meesage"=>"اطلاعات ورودی نامعتبر است",
+                "errors"=>$validator->errors()->all()
+            ],400);
         }
         else{
-            return [
-                "sucees"=>false,
-                "data"=>"شما دسترسی لازم برای دریافت اطلاعات را ندارید"
-            ];
+            $user = User::create([
+                "name"=>$request->name,
+                "email"=>$request->email,
+                "phone"=>$request->phone,
+                "password"=>$request->password,
+                "is_active"=>($request->is_active == 1) ? true : false,
+                "is_admin"=>($request->is_admin == 1) ? true : false,
+            ]);
+            return response([
+                "success"=>true,
+                "message"=>"کاربر با موفقیت اضافه گردید",
+                "data"=>$user
+            ],200);
         }
     }
 
@@ -82,28 +68,21 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        if(auth()->user()->is_admin){
-            $user = User::find($id);
-            return [
+        $user = User::find($id);
+        if($user){
+            return response([
                 "success"=>true,
                 "data"=>$user,
                 "tasks"=>$user->tasks()->get()
-            ];
-        }
-        else if(auth()->user()->id==$id){
-            $user = User::find($id);
-            return [
-                "success"=>true,
-                "data"=>$user,
-                "tasks"=>$user->tasks()->get()
-            ];
+            ],200);
         }
         else{
-            return [
+            return response([
                 "success"=>false,
-                "message"=>"شما دسترسی لازم برای این عملیات را ندارید"
-            ];
+                "message"=>"کاربر یافت نشد"
+            ],404);
         }
+        
     }
 
     /**
@@ -115,16 +94,21 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $result = $this->validate($request,[
+        $validator = Validator::make($request->all(),[
             "name"=>["required", "min:3","max:30"],
             "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
             "email"=>["required","email"],
             "password"=>["confirmed"],
         ]);
-
-        if($result){
+        if($validator->fails()){
+            return response([
+                "success"=>false,
+                "message"=>"اطلاعات ورودی اشتباه است"
+            ],400);
+        }
+        else{
             $user = User::find($id);
-            if(auth()->user()->is_admin){
+            if($user){
                 $user->update([
                     "name"=>$request->name,
                     "email"=>$request->email,
@@ -133,37 +117,18 @@ class UserController extends Controller
                     "is_active"=>($request->is_active == 1) ? true : false,
                     "is_admin"=>($request->is_admin == 1) ? true : false,
                 ]);
-                return [
+                return response([
                     "success"=>true,
                     "message"=>"کاربر با موفقیت ویرایش گردید",
                     "data"=>$user
-                ];
-            }
-            else if(auth()->user()->id == $id){
-                $user->update([
-                    "name"=>$request->name,
-                    "email"=>$request->email,
-                    "phone"=>$request->phone,
-                    "password"=>$request->password,
-                ]);
-                return [
-                    "success"=>true,
-                    "message"=>"کاربر با موفقیت ویرایش گردید",
-                    "data"=>$user
-                ];
+                ],200);
             }
             else{
-                return[
+                return response([
                     "success"=>false,
-                    "message"=>"شما دسترسی لازم برای این عملیات را ندارید"
-                ];
+                    "message"=>"کاربر یافت نشد"
+                ],404);
             }
-        }
-        else{
-            return[
-                "success"=>false,
-                "message"=>"اطلاعات ورودی اشتباه است"
-            ];
         }
     }
 
@@ -175,19 +140,19 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        if(auth()->user()->is_admin){
-            $user = User::find($id);
+        $user  = User::find($id);
+        if($user){
             $user->delete();
-            return[
+            return response([
                 "success"=>true,
                 "message"=>"کاربر با موفقیت حذف گردید"
-            ];
+            ],200);
         }
         else{
-            return[
+            return response([
                 "success"=>false,
-                "message"=>"شما دسترسی لازم برای این عملیات را ندارید"
-            ];
+                "message"=>"کاربر یافت نشد"
+            ],404);
         }
     }
 }
