@@ -23,11 +23,20 @@ class Jwt
             $user = JWTAuth::parseToken()->authenticate();
         } catch (Exception $e) {
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException){
-                return response()->json(['sucees'=>false,'message' => 'توکن نامعتبر است']);
+                return response([
+                    'sucees'=>false,
+                    'message' => 'توکن نامعتبر است'
+                ],401);
             }else if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException){
-                return response()->json(['sucees'=>false,'message' => 'توکن منقضی شده است']);
+                return response([
+                    'sucees'=>false,
+                    'message' => 'توکن منقضی شده است'
+                ],401);
             }else{
-                return response()->json(['sucees'=>false,'message' => 'توکن نامعتبر است']);
+                return response([
+                    'sucees'=>false,
+                    'message' => 'توکن نامعتبر است'
+                ],401);
             }
         }
         return $next($request);
