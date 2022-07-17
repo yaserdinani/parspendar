@@ -60,7 +60,7 @@
                   @enderror
                 </div>
               </div>
-            <button type="submit" class="btn btn-success">ویرایش</button>
+            <button type="submit" class="btn btn-success" onclick="return confirm('آیا از ویرایش این کاربر اطمینان دارید؟')">ویرایش</button>
         </form>
     </div>
 </div>

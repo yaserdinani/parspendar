@@ -59,7 +59,7 @@
                   @enderror
                 </div>
               </div>
-            <button type="submit" class="btn btn-success">افزودن</button>
+            <button type="submit" class="btn btn-success" onclick="return confirm('آیا از صحت اطلاعات وارد شده اطمینان دارید؟')">افزودن</button>
         </form>
     </div>
 </div>
