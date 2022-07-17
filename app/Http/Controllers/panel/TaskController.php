@@ -56,8 +56,6 @@ class TaskController extends Controller
             "started_at"=>["required", "date","after:yesterday","before:finished_at"],
             "finished_at"=>["required", "date","after:started_at"],
         ]);
-        
-        if(auth()->user()->is_admin){
             if(isset($request->users)){
                 $task = Task::create([
                     "name"=>$request->name,
@@ -78,21 +76,10 @@ class TaskController extends Controller
                     "started_at"=>$request->started_at,
                     "finished_at"=>$request->finished_at
                 ]);
+                $task->users()->attach(auth()->user());
                 return redirect()->route('tasks.index');
             }
-        }
-        else{
-            $task = Task::create([
-                "name"=>$request->name,
-                "description"=>$request->description,
-                "status"=>$request->status,
-                "started_at"=>$request->started_at,
-                "finished_at"=>$request->finished_at
-            ]);
-
-            $task->users()->attach(auth()->user());
-            return redirect()->route('tasks.index');
-        }
+        
     }
 
     /**
