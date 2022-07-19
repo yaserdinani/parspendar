@@ -21,12 +21,12 @@ Route::group(["middleware"=>"jwt.verify"],function(){
     // user routes
     Route::group(["middleware"=>"admin"],function(){
         Route::get('/users',[App\Http\Controllers\api\UserController::class,'index']);
-        Route::get('/users/{id}',[App\Http\Controllers\api\UserController::class,'show']);
+        Route::get('/users/{user}',[App\Http\Controllers\api\UserController::class,'show']);
         Route::post('/users/create',[App\Http\Controllers\api\UserController::class,'store']);
-        Route::put('/users/{id}/update',[App\Http\Controllers\api\UserController::class,'update']);
-        Route::delete('/users/{id}/delete',[App\Http\Controllers\api\UserController::class,'destroy']);
+        Route::put('/users/{user}/update',[App\Http\Controllers\api\UserController::class,'update']);
+        Route::delete('/users/{user}/delete',[App\Http\Controllers\api\UserController::class,'destroy']);
         // task route
-        Route::delete('/tasks/{id}/delete',[App\Http\Controllers\api\TaskController::class,'destroy']);
+        Route::delete('/tasks/{user}/delete',[App\Http\Controllers\api\TaskController::class,'destroy']);
     });
     // task routes
     Route::get('/tasks',[App\Http\Controllers\api\TaskController::class,'index']);

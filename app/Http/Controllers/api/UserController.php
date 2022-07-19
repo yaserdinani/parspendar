@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -31,9 +33,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            "name"=>["required", "min:3","max:30"],
-            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
-            "email"=>["required","email"],
+            "name"=>["required","string","min:3","max:30"],
+            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u","unique:users"],
+            "email"=>["required","email","unique:users"],
             "password"=>["required","confirmed"],
         ]);
         if($validator->fails()){
@@ -48,7 +50,7 @@ class UserController extends Controller
                 "name"=>$request->name,
                 "email"=>$request->email,
                 "phone"=>$request->phone,
-                "password"=>$request->password,
+                "password"=>Hash::make($request->password),
                 "is_active"=>($request->is_active == 1) ? true : false,
                 "is_admin"=>($request->is_admin == 1) ? true : false,
             ]);
@@ -66,22 +68,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        $user = User::find($id);
-        if($user){
-            return response([
-                "success"=>true,
-                "data"=>$user,
-                "tasks"=>$user->tasks()->get()
-            ],200);
-        }
-        else{
-            return response([
-                "success"=>false,
-                "message"=>"کاربر یافت نشد"
-            ],404);
-        }
+        return response([
+            "success"=>true,
+            "data"=>$user,
+            "tasks"=>$user->tasks()->get()
+        ],200);
         
     }
 
@@ -92,12 +85,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,User $user)
     {
         $validator = Validator::make($request->all(),[
             "name"=>["required", "min:3","max:30"],
-            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
-            "email"=>["required","email"],
+            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u",Rule::unique('users')->ignore($user->id)],
+            "email"=>["required","email",Rule::unique('users')->ignore($user->id)],
             "password"=>["confirmed"],
         ]);
         if($validator->fails()){
@@ -107,28 +100,19 @@ class UserController extends Controller
             ],400);
         }
         else{
-            $user = User::find($id);
-            if($user){
-                $user->update([
-                    "name"=>$request->name,
-                    "email"=>$request->email,
-                    "phone"=>$request->phone,
-                    "password"=>$request->password,
-                    "is_active"=>($request->is_active == 1) ? true : false,
-                    "is_admin"=>($request->is_admin == 1) ? true : false,
-                ]);
-                return response([
-                    "success"=>true,
-                    "message"=>"کاربر با موفقیت ویرایش گردید",
-                    "data"=>$user
-                ],200);
-            }
-            else{
-                return response([
-                    "success"=>false,
-                    "message"=>"کاربر یافت نشد"
-                ],404);
-            }
+            $user->update([
+                "name"=>$request->name,
+                "email"=>$request->email,
+                "phone"=>$request->phone,
+                "password"=>(isset($request->password) ? Hash::make($request->password) : $user->password),
+                "is_active"=>($request->is_active == 1) ? true : false,
+                "is_admin"=>($request->is_admin == 1) ? true : false,
+            ]);
+            return response([
+                "success"=>true,
+                "message"=>"کاربر با موفقیت ویرایش گردید",
+                "data"=>$user
+            ],200);
         }
     }
 
@@ -140,19 +124,10 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user  = User::find($id);
-        if($user){
-            $user->delete();
+        $user->delete();
             return response([
                 "success"=>true,
                 "message"=>"کاربر با موفقیت حذف گردید"
             ],200);
-        }
-        else{
-            return response([
-                "success"=>false,
-                "message"=>"کاربر یافت نشد"
-            ],404);
-        }
     }
 }

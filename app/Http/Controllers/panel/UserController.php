@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -41,8 +42,8 @@ class UserController extends Controller
     {
         $this->validate($request,[
             "name"=>["required", "min:3","max:30"],
-            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
-            "email"=>["required","email"],
+            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u","unique:users"],
+            "email"=>["required","email","unique:users"],
             "password"=>["required","confirmed"],
             "role"=>["required","in:0,1"]
         ]);
@@ -91,8 +92,8 @@ class UserController extends Controller
     {
         $this->validate($request,[
             "name"=>["required", "min:3","max:30"],
-            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u"],
-            "email"=>["required","email"],
+            "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u",Rule::unique('users')->ignore($user->id)],
+            "email"=>["required","email",Rule::unique('users')->ignore($user->id)],
             "password"=>["confirmed"],
             "role"=>["required","in:0,1"]
         ]);
