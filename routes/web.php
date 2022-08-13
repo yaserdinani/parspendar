@@ -20,6 +20,10 @@ Route::group(["middleware"=>"auth"],function(){
     Route::get('/auth/logout',[App\Http\Controllers\panel\AuthController::class,'logout'])->name('auth.logout');
     Route::resource('tasks',App\Http\Controllers\panel\TaskController::class);
     Route::post('/task/filter',[App\Http\Controllers\panel\TaskController::class,"filter"])->name('tasks.filter');
+    // livewire Routes
+    Route::get('/livewire/tasks',App\Http\Livewire\Task\Index::class)->name('livewire.tasks.index');
+    Route::get('/livewire/tasks/create',App\Http\Livewire\Task\Create::class)->name('livewire.tasks.create');
+    Route::get('/livewire/tasks/{task}/edit',App\Http\Livewire\Task\Edit::class)->name('livewire.tasks.edit');
 });
 
 Route::group(["middleware"=>"admin"],function(){
