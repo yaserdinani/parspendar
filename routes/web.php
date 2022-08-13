@@ -25,4 +25,8 @@ Route::group(["middleware"=>"auth"],function(){
 Route::group(["middleware"=>"admin"],function(){
     Route::resource('users',App\Http\Controllers\panel\UserController::class);
     Route::post('/user/filter',[App\Http\Controllers\panel\UserController::class,"filter"])->name('users.filter');
+    // livewire Routes
+    Route::get('/livewire/users',App\Http\Livewire\User\Index::class)->name('livewire.users.index');
+    Route::get('/livewire/users/create',App\Http\Livewire\User\Create::class)->name('livewire.users.create');
+    Route::get('/livewire/users/{user}/edit',App\Http\Livewire\User\Edit::class)->name('livewire.users.edit');
 });
