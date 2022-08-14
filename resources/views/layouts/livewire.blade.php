@@ -10,6 +10,7 @@
     @livewireStyles
 </head>
 <body>
+    <livewire:components.navbar/>
     <div class="container mt-5">
         {{$slot}}
     </div>
