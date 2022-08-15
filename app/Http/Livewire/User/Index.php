@@ -58,11 +58,16 @@ class Index extends Component
                 "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u","unique:users"],
                 "email"=>["required","email","unique:users"],
                 "password"=>["required","confirmed"],
-                "roles"=>["required","exists:roles"]
+                "roles"=>["required","exists:roles,id"]
             ]
         );
-        $user = User::create($validateData);
-        $user->assignRole($validateData["roles"]);
+        $user = User::create([
+            "name"=>$this->name,
+            "phone"=>$this->phone,
+            "email"=>$this->email,
+            "password"=>$this->password
+        ]);
+        $user->assignRole($this->roles);
         $this->resetInputs();
     }
 
@@ -74,10 +79,19 @@ class Index extends Component
                 "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u",Rule::unique('users')->ignore($this->current_user->id)],
                 "email"=>["required","email",Rule::unique('users')->ignore($this->current_user->id)],
                 "password"=>["confirmed"],
-                "roles"=>["required","exists:roles"]
+                "roles"=>["required","exists:roles,id"]
             ]
         );
-        $this->current_user = $this->current_user->update($validateData);
+        if(isset($this->password)){
+            $this->current_user->update([
+                "password"=>$this->password
+            ]);
+        }
+        $this->current_user->update([
+            "name"=>$this->name,
+            "phone"=>$this->phone,
+            "email"=>$this->email
+        ]);
         DB::table('model_has_roles')->where('model_id',$this->current_user->id)->delete();
         $this->current_user->assignRole($this->roles);
         $this->resetInputs();
