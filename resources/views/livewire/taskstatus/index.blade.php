@@ -15,9 +15,7 @@
                     <th scope="col">شناسه</th>
                     <th scope="col">عنوان</th>
                     <th scope="col">ویرایش</th>
-                    @if (auth()->user()->is_admin)
-                        <th scope="col">حذف</th>
-                    @endif
+                    <th scope="col">حذف</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,21 +24,21 @@
                         <th scope="row">{{ $status->id }}</th>
                         <td>{{ $status->name }}</td>
                         <td>
-                            <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning" wire:click="edit({{$status}})">ویرایش</a>
+                            <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
+                                wire:click="edit({{ $status }})">ویرایش</a>
                         </td>
-                        @if (auth()->user()->is_admin)
-                            <td>
-                                <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger" wire:click="setStatus({{$status}})">حذف</a>
-                            </td>
-                        @endif
+                        <td>
+                            <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
+                                wire:click="setStatus({{ $status }})">حذف</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
     {{-- create modal --}}
-    <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel"
-        aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
+        aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -52,7 +50,7 @@
                 <div class="modal-body">
                     <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name' required>
                     @error('name')
-                      <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="modal-footer">
@@ -63,8 +61,8 @@
         </div>
     </div>
     {{-- update modal --}}
-    <div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
-        aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" role="dialog"
+        aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -76,7 +74,7 @@
                 <div class="modal-body">
                     <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name' required>
                     @error('name')
-                      <div class="alert alert-danger">{{ $message }}</div>
+                        <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="modal-footer">
@@ -87,8 +85,8 @@
         </div>
     </div>
     {{-- delete modal --}}
-    <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
-        aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+        aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -102,7 +100,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='delete' data-dismiss="modal">حذف</button>
+                    <button type="button" class="btn btn-primary" wire:click='delete'
+                        data-dismiss="modal">حذف</button>
                 </div>
             </div>
         </div>
