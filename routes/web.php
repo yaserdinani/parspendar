@@ -33,4 +33,5 @@ Route::group(["middleware"=>"admin"],function(){
     Route::get('/livewire/users',App\Http\Livewire\User\Index::class)->name('livewire.users.index');
     Route::get('/livewire/users/create',App\Http\Livewire\User\Create::class)->name('livewire.users.create');
     Route::get('/livewire/users/{user}/edit',App\Http\Livewire\User\Edit::class)->name('livewire.users.edit');
+    Route::get('/livewire/statuses',App\Http\Livewire\Taskstatus\Index::class)->name('livewire.status.index');
 });

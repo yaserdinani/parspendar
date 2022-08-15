@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Livewire\Taskstatus;
+
+use Livewire\Component;
+use App\Models\TaskStatus;
+
+class Index extends Component
+{
+    public $statuses;
+    public $name;
+    public $status_id;
+    public $update_mode = false;
+    public $current_status;
+
+    protected $listeners = ["statusAdded","statusChanged","statusRemoved"];
+
+    protected $rules = [
+        "name"=>["required","string","min:3","max:30"]
+    ];
+
+    public function mount(){
+        $this->statuses = TaskStatus::all();
+    }
+
+    public function setStatus(TaskStatus $status){
+        $this->current_status = $status;
+    }
+
+    public function resetInputs(){
+        $this->name = null;
+        $this->update_mode = false;
+        $this->status_id = null;
+        $this->current_status = null;
+    }
+
+    public function statusAdded(){
+        $this->statuses = TaskStatus::all();
+    }
+
+    public function statusChanged(){
+        $this->statuses = TaskStatus::all();
+    }
+
+    public function statusRemoved(){
+        $this->statuses = TaskStatus::all();
+    }
+
+    public function store(){
+        $validation = $this->validate();
+        TaskStatus::create($validation);
+        $this->emit('statusAdded');
+        $this->resetInputs();
+    }
+
+    public function edit(TaskStatus $status){
+        $this->update_mode = true;
+        $this->status_id = $status->id;
+        $this->name = $status->name;
+        $this->current_status = $status;
+    }
+
+    public function update(){
+        $validation = $this->validate();
+
+        if($this->status_id){
+            $this->current_status->update($validation);
+            $this->resetInputs();
+            $this->emit('statusChanged');
+        }
+
+    }
+
+    public function delete(){
+        $this->current_status->delete();
+        $this->resetInputs();
+        $this->emit('statusRemoved');
+    }
+
+    public function render()
+    {
+        return view('livewire.taskstatus.index');
+    }
+}
