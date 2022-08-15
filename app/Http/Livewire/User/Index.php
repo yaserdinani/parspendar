@@ -9,6 +9,7 @@ use App\Models\TaskStatus;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use Illuminate\Validation\Rule;
 
 
 class Index extends Component
