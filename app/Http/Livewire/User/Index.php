@@ -56,7 +56,7 @@ class Index extends Component
                 "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u","unique:users"],
                 "email"=>["required","email","unique:users"],
                 "password"=>["required","confirmed"],
-                "roles"=>["required"]
+                "roles"=>["required","exists:roles"]
             ]
         );
         $user = User::create($validateData);
@@ -71,7 +71,7 @@ class Index extends Component
                 "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u",Rule::unique('users')->ignore($this->current_user->id)],
                 "email"=>["required","email",Rule::unique('users')->ignore($this->current_user->id)],
                 "password"=>["confirmed"],
-                "roles"=>["required"]
+                "roles"=>["required","exists:roles"]
             ]
         );
         $this->current_user = $this->current_user->update($validateData);
