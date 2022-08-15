@@ -26,9 +26,10 @@ Route::group(["middleware"=>"auth"],function(){
     Route::get('/livewire/tasks',App\Http\Livewire\Task\Index::class)->name('livewire.tasks.index');
     Route::get('/livewire/tasks/create',App\Http\Livewire\Task\Create::class)->name('livewire.tasks.create');
     Route::get('/livewire/tasks/{task}/edit',App\Http\Livewire\Task\Edit::class)->name('livewire.tasks.edit');
-    Route::get('/livewire/users',App\Http\Livewire\User\Index::class)->name('livewire.users.index');
-    Route::get('/livewire/users/create',App\Http\Livewire\User\Create::class)->name('livewire.users.create');
-    Route::get('/livewire/users/{user}/edit',App\Http\Livewire\User\Edit::class)->name('livewire.users.edit');
-    Route::get('/livewire/statuses',App\Http\Livewire\Taskstatus\Index::class)->name('livewire.status.index');
+    Route::group(['middleware' => ['role:Admin']], function () {
+        Route::get('/livewire/users',App\Http\Livewire\User\Index::class)->name('livewire.users.index');
+        Route::get('/livewire/statuses',App\Http\Livewire\Taskstatus\Index::class)->name('livewire.status.index');
+        Route::get('/livewire/roles',App\Http\Livewire\Role\Index::class)->name('livewire.roles.index');
+    });
 });
 
