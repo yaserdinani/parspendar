@@ -6,7 +6,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            @role('Admin')
+            {{-- @can('') --}}
                 <li
                     class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.users.index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('livewire.users.index') }}">کاربران</a>
@@ -19,7 +19,7 @@
                     class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.roles.index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('livewire.roles.index') }}">نقش‌ها</a>
                 </li>
-            @endrole
+            {{-- @endcan --}}
             <li
                 class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.tasks.index' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('livewire.tasks.index') }}">همه‌ی وظایف</a>

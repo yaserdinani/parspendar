@@ -48,6 +48,7 @@ class Index extends Component
     }
 
     public function store(){
+        abort_unless(auth()->user()->can('role-create'), '403', 'Unauthorized.');
         $validateData = $this->validate([
             "name"=>["required","unique:roles,name"],
             "permissions"=>["required"]
@@ -62,6 +63,7 @@ class Index extends Component
     }
 
     public function update(){
+        abort_unless(auth()->user()->can('role-edit'), '403', 'Unauthorized.');
         $validateData = $this->validate([
             "name"=>["required",Rule::unique('roles')->ignore($this->current_role->id)],
             "permissions"=>["required"]
@@ -77,6 +79,7 @@ class Index extends Component
     }
 
     public function delete(){
+        abort_unless(auth()->user()->can('role-delete'), '403', 'Unauthorized.');
         $this->current_role->delete();
         $this->resetInputs();
         $this->emit('roleRemoved');
@@ -84,6 +87,7 @@ class Index extends Component
 
     public function render()
     {
+        abort_unless(auth()->user()->can('role-list'), '403', 'Unauthorized.');
         return view('livewire.role.index');
     }
 }

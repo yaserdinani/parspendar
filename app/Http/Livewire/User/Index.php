@@ -51,6 +51,7 @@ class Index extends Component
     }
 
     public function store(){
+        abort_unless(auth()->user()->can('user-create'), '403', 'Unauthorized.');
         $validateData = $this->validate(
             [
                 "name"=>["required","string","min:3","max:20"],
@@ -66,6 +67,7 @@ class Index extends Component
     }
 
     public function update(){
+        abort_unless(auth()->user()->can('user-edit'), '403', 'Unauthorized.');
         $validateData = $this->validate(
             [
                 "name"=>["required","string","min:3","max:30"],
@@ -82,12 +84,14 @@ class Index extends Component
     }
 
     public function delete(){
+        abort_unless(auth()->user()->can('user-delete'), '403', 'Unauthorized.');
         $this->current_user->delete();
         $this->resetInputs();
     }
 
     public function render()
     {
+        abort_unless(auth()->user()->can('user-list'), '403', 'Unauthorized.');
         $users = User::paginate(2);
         return view('livewire.user.index')
         ->with('users', $users);
