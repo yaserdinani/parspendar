@@ -5,14 +5,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        @if(auth()->user()->is_admin)
             <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'livewire.users.index') ? 'active' : ''}}">
                 <a class="nav-link" href="{{route('livewire.users.index')}}">کاربران</a>
             </li>
             <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'livewire.status.index') ? 'active' : ''}}">
                 <a class="nav-link" href="{{route('livewire.status.index')}}">وضعیت‌ها</a>
             </li>
-        @endif
         <li class="nav-item {{(Illuminate\Support\Facades\Request::route()->getName() == 'livewire.tasks.index') ? 'active' : ''}}">
             <a class="nav-link" href="{{route('livewire.tasks.index')}}">همه‌ی وظایف</a>
         </li>

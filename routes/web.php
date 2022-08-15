@@ -20,18 +20,15 @@ Route::group(["middleware"=>"auth"],function(){
     Route::get('/auth/logout',[App\Http\Controllers\panel\AuthController::class,'logout'])->name('auth.logout');
     Route::resource('tasks',App\Http\Controllers\panel\TaskController::class);
     Route::post('/task/filter',[App\Http\Controllers\panel\TaskController::class,"filter"])->name('tasks.filter');
+    Route::resource('users',App\Http\Controllers\panel\UserController::class);
+    Route::post('/user/filter',[App\Http\Controllers\panel\UserController::class,"filter"])->name('users.filter');
     // livewire Routes
     Route::get('/livewire/tasks',App\Http\Livewire\Task\Index::class)->name('livewire.tasks.index');
     Route::get('/livewire/tasks/create',App\Http\Livewire\Task\Create::class)->name('livewire.tasks.create');
     Route::get('/livewire/tasks/{task}/edit',App\Http\Livewire\Task\Edit::class)->name('livewire.tasks.edit');
-});
-
-Route::group(["middleware"=>"admin"],function(){
-    Route::resource('users',App\Http\Controllers\panel\UserController::class);
-    Route::post('/user/filter',[App\Http\Controllers\panel\UserController::class,"filter"])->name('users.filter');
-    // livewire Routes
     Route::get('/livewire/users',App\Http\Livewire\User\Index::class)->name('livewire.users.index');
     Route::get('/livewire/users/create',App\Http\Livewire\User\Create::class)->name('livewire.users.create');
     Route::get('/livewire/users/{user}/edit',App\Http\Livewire\User\Edit::class)->name('livewire.users.edit');
     Route::get('/livewire/statuses',App\Http\Livewire\Taskstatus\Index::class)->name('livewire.status.index');
 });
+

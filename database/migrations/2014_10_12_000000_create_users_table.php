@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('phone')->unique();
             $table->string('password');
             $table->boolean('is_active')->default(true);
-            $table->boolean('is_admin')->default(false);
             $table->timestamps();
         });
     }
