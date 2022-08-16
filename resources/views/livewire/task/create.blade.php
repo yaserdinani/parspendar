@@ -50,7 +50,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-6 text-right">
                         <label for="finished_at">پایان</label>
-                        <input type="date" class="form-control text-right" wire:model.lazy="finished_at" id="finished_at" required
+                        <input type="text" class="form-control text-right example1" wire:model.lazy="finished_at" id="finished_at" required
                             autocomplete="off">
                         @error('finished_at')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="form-group col-md-6 text-right">
                         <label for="started_at">شروع</label>
-                        <input type="date" class="form-control text-right" wire:model.lazy="started_at" id="started_at" required
+                        <input type="text" class="form-control text-right example1" wire:model.lazy="started_at" id="started_at" required
                             autocomplete="off">
                         @error('started_at')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -70,3 +70,11 @@
             </form>
         </div>
     </div>
+    @push('scripts')
+    <script type="text/javascript" defer>
+        $(document).ready(function() {
+            var x =  $(".example1").pDatepicker();
+            console.log(x);
+        });
+    </script>
+    @endpush
