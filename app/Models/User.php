@@ -8,7 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject
@@ -69,9 +68,5 @@ class User extends Authenticatable implements JWTSubject
 
     public function tasks(){
         return $this->belongsToMany(Task::class,'task_user');
-    }
-
-    public function setPasswordAttribute($value){
-        $this->attributes['password'] = Hash::make($value);
     }
 }

@@ -19,6 +19,10 @@
                     class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.roles.index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('livewire.roles.index') }}">نقش‌ها</a>
                 </li>
+                <li
+                    class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.permissions.index' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('livewire.permissions.index') }}">دسترسی‌ها</a>
+                </li>
             {{-- @endcan --}}
             <li
                 class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.tasks.index' ? 'active' : '' }}">

@@ -18,7 +18,7 @@ class IsAdmin
     public function handle(Request $request, Closure $next)
     {
         if ($request->header('Authorization')) {
-            if (Auth::user() &&  Auth::user()->is_admin && Auth::user()->is_active) {
+            if (Auth::user() &&  Auth::user()->is_active) {
                 return $next($request);
             }
             else{
@@ -28,7 +28,7 @@ class IsAdmin
                 ],403);
             }
         } else {
-            if (Auth::user() &&  Auth::user()->is_admin && Auth::user()->is_active) {
+            if (Auth::user() && Auth::user()->is_active) {
                 return $next($request);
             }
             else{

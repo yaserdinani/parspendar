@@ -47,6 +47,7 @@ class Index extends Component
     }
 
     public function store(){
+        abort_unless(auth()->user()->can('status-create'), '403', 'Unauthorized.');
         $validation = $this->validate();
         TaskStatus::create($validation);
         $this->emit('statusAdded');
@@ -61,6 +62,7 @@ class Index extends Component
     }
 
     public function update(){
+        abort_unless(auth()->user()->can('status-edit'), '403', 'Unauthorized.');
         $validation = $this->validate();
 
         if($this->status_id){
@@ -72,6 +74,7 @@ class Index extends Component
     }
 
     public function delete(){
+        abort_unless(auth()->user()->can('status-delete'), '403', 'Unauthorized.');
         $this->current_status->delete();
         $this->resetInputs();
         $this->emit('statusRemoved');
@@ -79,6 +82,7 @@ class Index extends Component
 
     public function render()
     {
+        abort_unless(auth()->user()->can('status-list'), '403', 'Unauthorized.');
         return view('livewire.taskstatus.index');
     }
 }

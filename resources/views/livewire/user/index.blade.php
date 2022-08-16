@@ -123,7 +123,7 @@
             </div>
         </div>
     </div>
-    {{-- create modal --}}
+    {{-- update modal --}}
     <div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -183,7 +183,7 @@
                                     </div>
                                     <div class="form-group col-md-6 text-right">
                                       <label for="password">رمز عبور</label>
-                                      <input type="password" class="form-control text-right" wire:model.lazy='password' id="password" placeholder="رمز عبور" required autocomplete="off">
+                                      <input type="password" class="form-control text-right" wire:model.lazy='password' id="password" placeholder="رمز عبور" autocomplete="off">
                                       @error('password')
                                           <div class="alert alert-danger">{{ $message }}</div>
                                       @enderror

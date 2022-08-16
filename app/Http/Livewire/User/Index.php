@@ -65,7 +65,7 @@ class Index extends Component
             "name"=>$this->name,
             "phone"=>$this->phone,
             "email"=>$this->email,
-            "password"=>$this->password
+            "password"=>Hash::make($this->password)
         ]);
         $user->assignRole($this->roles);
         $this->resetInputs();
@@ -73,25 +73,38 @@ class Index extends Component
 
     public function update(){
         abort_unless(auth()->user()->can('user-edit'), '403', 'Unauthorized.');
-        $validateData = $this->validate(
-            [
-                "name"=>["required","string","min:3","max:30"],
-                "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u",Rule::unique('users')->ignore($this->current_user->id)],
-                "email"=>["required","email",Rule::unique('users')->ignore($this->current_user->id)],
-                "password"=>["confirmed"],
-                "roles"=>["required","exists:roles,id"]
-            ]
-        );
         if(isset($this->password)){
+            $validateData = $this->validate(
+                [
+                    "name"=>["required","string","min:3","max:30"],
+                    "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u",Rule::unique('users')->ignore($this->current_user->id)],
+                    "email"=>["required","email",Rule::unique('users')->ignore($this->current_user->id)],
+                    "password"=>["confirmed"],
+                    "roles"=>["required","exists:roles,id"]
+                ]
+            );
             $this->current_user->update([
-                "password"=>$this->password
+                "password"=>Hash::make($this->password),
+                "name"=>$this->name,
+                "phone"=>$this->phone,
+                "email"=>$this->email
             ]);
         }
-        $this->current_user->update([
-            "name"=>$this->name,
-            "phone"=>$this->phone,
-            "email"=>$this->email
-        ]);
+        else{
+            $validateData = $this->validate(
+                [
+                    "name"=>["required","string","min:3","max:30"],
+                    "phone"=>["required","regex:/^(\+98|0)?9\d{9}$/u",Rule::unique('users')->ignore($this->current_user->id)],
+                    "email"=>["required","email",Rule::unique('users')->ignore($this->current_user->id)],
+                    "roles"=>["required","exists:roles,id"]
+                ]
+            );
+            $this->current_user->update([
+                "name"=>$this->name,
+                "phone"=>$this->phone,
+                "email"=>$this->email
+            ]);
+        }
         DB::table('model_has_roles')->where('model_id',$this->current_user->id)->delete();
         $this->current_user->assignRole($this->roles);
         $this->resetInputs();
