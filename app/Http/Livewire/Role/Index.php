@@ -7,32 +7,35 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $name;
     public $permissions = [];
     public $current_role;
-    public $roles;
-    protected $listeners = ['roleAdded','roleChanged','roleRemoved'];
+    // public $roles;
+    // protected $listeners = ['roleAdded','roleChanged','roleRemoved'];
     public $all_permissions;
 
     public function mount(){
-        $this->roles = Role::all();
+        // $this->roles = Role::all();
         $this->all_permissions = Permission::all();
     }
 
-    public function roleAdded(){
-        $this->roles = Role::all();
-    }
+    // public function roleAdded(){
+    //     $this->roles = Role::all();
+    // }
 
-    public function roleChanged(){
-        $this->roles = Role::all();
-    }
+    // public function roleChanged(){
+    //     $this->roles = Role::all();
+    // }
 
-    public function roleRemoved(){
-        $this->roles = Role::all();
-    }
+    // public function roleRemoved(){
+    //     $this->roles = Role::all();
+    // }
 
     public function resetInputs(){
         $this->name = null;
@@ -59,7 +62,7 @@ class Index extends Component
         ]);
         $role->syncPermissions($this->permissions);
         $this->resetInputs();
-        $this->emit('roleAdded');
+        // $this->emit('roleAdded');
     }
 
     public function update(){
@@ -75,19 +78,20 @@ class Index extends Component
         
         $this->current_role->syncPermissions($this->permissions);
         $this->resetInputs();
-        $this->emit('roleChanged');
+        // $this->emit('roleChanged');
     }
 
     public function delete(){
         abort_unless(auth()->user()->can('role-delete'), '403', 'Unauthorized.');
         $this->current_role->delete();
         $this->resetInputs();
-        $this->emit('roleRemoved');
+        // $this->emit('roleRemoved');
     }
 
     public function render()
     {
         abort_unless(auth()->user()->can('role-list'), '403', 'Unauthorized.');
-        return view('livewire.role.index');
+        $roles = Role::paginate(2);
+        return view('livewire.role.index',["roles"=>$roles]);
     }
 }

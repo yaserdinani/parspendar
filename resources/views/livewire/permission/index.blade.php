@@ -35,6 +35,7 @@
                 @endforeach
             </tbody>
         </table>
+        {{$permissions->links() }}
     </div>
     {{-- create modal --}}
     <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"

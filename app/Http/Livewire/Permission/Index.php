@@ -5,17 +5,20 @@ namespace App\Http\Livewire\Permission;
 use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Validation\Rule;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $name;
     public $current_permission;
-    public $permissions;
+    // public $permissions;
 
-    protected $listeners = ['permissionAdded','permissionChanged','permissionRemoved'];
+    // protected $listeners = ['permissionAdded','permissionChanged','permissionRemoved'];
 
     public function mount(){
-        $this->permissions = Permission::all();
+        // $this->permissions = Permission::all();
     }
 
     public function store(){
@@ -28,17 +31,17 @@ class Index extends Component
         $this->emit('permissionAdded');
     }
 
-    public function permissionAdded(){
-        $this->permissions = Permission::all();
-    }
+    // public function permissionAdded(){
+    //     $this->permissions = Permission::all();
+    // }
 
-    public function permissionChanged(){
-        $this->permissions = Permission::all();
-    }
+    // public function permissionChanged(){
+    //     $this->permissions = Permission::all();
+    // }
 
-    public function permissionRemoved(){
-        $this->permissions = Permission::all();
-    }
+    // public function permissionRemoved(){
+    //     $this->permissions = Permission::all();
+    // }
 
     public function resetInputs(){
         $this->name = null;
@@ -57,20 +60,21 @@ class Index extends Component
         ]);
         $this->current_permission->update($validateData);
         $this->resetInputs();
-        $this->emit('permissionChanged');
+        // $this->emit('permissionChanged');
     }
 
     public function delete(){
         abort_unless(auth()->user()->can('permission-delete'), '403', 'Unauthorized.');
         $this->current_permission->delete();
         $this->resetInputs();
-        $this->emit('permissionRemoved');
+        // $this->emit('permissionRemoved');
     }
 
 
     public function render()
     {
         abort_unless(auth()->user()->can('permission-list'), '403', 'Unauthorized.');
-        return view('livewire.permission.index');
+        $permissions = Permission::paginate(2);
+        return view('livewire.permission.index',["permissions"=>$permissions]);
     }
 }

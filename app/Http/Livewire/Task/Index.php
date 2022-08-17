@@ -7,11 +7,15 @@ use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
 use Carbon\Carbon;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
 
-    public $tasks;
+    protected $paginationTheme = 'bootstrap';
+
+    // public $tasks;
     public $current_task;
     public $name;
     public $description;
@@ -24,7 +28,8 @@ class Index extends Component
     public $start_time;
     public $finish_time;
 
-    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt"];
+    // protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt"];
+    protected $listeners = ["setStartedAt","setFinishedAt"];
 
     public function resetInputs(){
         $this->current_task = null;
@@ -42,42 +47,42 @@ class Index extends Component
         if(auth()->user()->can('add-task-for-users')){
             $this->all_users = User::all();
         }
-        if(auth()->user()->can('see-all-tasks')){
-            $this->tasks = Task::all();
-        }
-        else{
-            $this->tasks = auth()->user()->tasks;
-        }
+        // if(auth()->user()->can('see-all-tasks')){
+        //     $this->tasks = Task::all();
+        // }
+        // else{
+        //     $this->tasks = auth()->user()->tasks;
+        // }
         $this->statuses = TaskStatus::all();
         $this->users = [auth()->user()->id];
     }
 
-    public function taskAdded(){
-        if(auth()->user()->can('see-all-tasks')){
-            $this->tasks = Task::all();
-        }
-        else{
-            $this->tasks = auth()->user()->tasks;
-        }
-    }
+    // public function taskAdded(){
+    //     if(auth()->user()->can('see-all-tasks')){
+    //         $this->tasks = Task::all();
+    //     }
+    //     else{
+    //         $this->tasks = auth()->user()->tasks;
+    //     }
+    // }
 
-    public function taskRemoved(){
-        if(auth()->user()->can('see-all-tasks')){
-            $this->tasks = Task::all();
-        }
-        else{
-            $this->tasks = auth()->user()->tasks;
-        }
-    }
+    // public function taskRemoved(){
+    //     if(auth()->user()->can('see-all-tasks')){
+    //         $this->tasks = Task::all();
+    //     }
+    //     else{
+    //         $this->tasks = auth()->user()->tasks;
+    //     }
+    // }
 
-    public function taskChanged(){
-        if(auth()->user()->can('see-all-tasks')){
-            $this->tasks = Task::all();
-        }
-        else{
-            $this->tasks = auth()->user()->tasks;
-        }
-    }
+    // public function taskChanged(){
+    //     if(auth()->user()->can('see-all-tasks')){
+    //         $this->tasks = Task::all();
+    //     }
+    //     else{
+    //         $this->tasks = auth()->user()->tasks;
+    //     }
+    // }
     
     public function setCurrentTask(Task $task){
         $this->currentTask = $task;
@@ -95,7 +100,7 @@ class Index extends Component
         abort_unless(auth()->user()->can('task-delete'), '403', 'Unauthorized.');
         $this->currentTask->delete();
         $this->resetInputs();
-        $this->emit('taskRemoved');
+        // $this->emit('taskRemoved');
     }
 
     public function store(){
@@ -122,7 +127,7 @@ class Index extends Component
 
         $task->users()->sync($this->users);
         $this->resetInputs();
-        $this->emit('taskAdded');
+        // $this->emit('taskAdded');
     }
 
     public function update(){
@@ -148,13 +153,19 @@ class Index extends Component
 
         $this->currentTask->users()->sync($this->users);
         $this->resetInputs();
-        $this->emit('taskChanged');
+        // $this->emit('taskChanged');
     }
 
     public function render()
     {
         abort_unless(auth()->user()->can('task-list'), '403', 'Unauthorized.');
-        return view('livewire.task.index');
+        if(auth()->user()->can('see-all-tasks')){
+            $tasks = Task::paginate(2);
+        }
+        else{
+            $tasks = auth()->user()->tasks()->paginate(2);
+        }
+        return view('livewire.task.index',["tasks"=>$tasks]);
     }
 
     public function setStartedAt($value){

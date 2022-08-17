@@ -4,23 +4,27 @@ namespace App\Http\Livewire\Taskstatus;
 
 use Livewire\Component;
 use App\Models\TaskStatus;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
-    public $statuses;
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+    // public $statuses;
     public $name;
     public $status_id;
     public $update_mode = false;
     public $current_status;
 
-    protected $listeners = ["statusAdded","statusChanged","statusRemoved"];
+    // protected $listeners = ["statusAdded","statusChanged","statusRemoved"];
 
     protected $rules = [
         "name"=>["required","string","min:3","max:30"]
     ];
 
     public function mount(){
-        $this->statuses = TaskStatus::all();
+        // $this->statuses = TaskStatus::all();
     }
 
     public function setStatus(TaskStatus $status){
@@ -34,23 +38,23 @@ class Index extends Component
         $this->current_status = null;
     }
 
-    public function statusAdded(){
-        $this->statuses = TaskStatus::all();
-    }
+    // public function statusAdded(){
+    //     $this->statuses = TaskStatus::all();
+    // }
 
-    public function statusChanged(){
-        $this->statuses = TaskStatus::all();
-    }
+    // public function statusChanged(){
+    //     $this->statuses = TaskStatus::all();
+    // }
 
-    public function statusRemoved(){
-        $this->statuses = TaskStatus::all();
-    }
+    // public function statusRemoved(){
+    //     $this->statuses = TaskStatus::all();
+    // }
 
     public function store(){
         abort_unless(auth()->user()->can('status-create'), '403', 'Unauthorized.');
         $validation = $this->validate();
         TaskStatus::create($validation);
-        $this->emit('statusAdded');
+        // $this->emit('statusAdded');
         $this->resetInputs();
     }
 
@@ -68,7 +72,7 @@ class Index extends Component
         if($this->status_id){
             $this->current_status->update($validation);
             $this->resetInputs();
-            $this->emit('statusChanged');
+            // $this->emit('statusChanged');
         }
 
     }
@@ -77,12 +81,13 @@ class Index extends Component
         abort_unless(auth()->user()->can('status-delete'), '403', 'Unauthorized.');
         $this->current_status->delete();
         $this->resetInputs();
-        $this->emit('statusRemoved');
+        // $this->emit('statusRemoved');
     }
 
     public function render()
     {
         abort_unless(auth()->user()->can('status-list'), '403', 'Unauthorized.');
-        return view('livewire.taskstatus.index');
+        $statuses = TaskStatus::paginate(2);
+        return view('livewire.taskstatus.index',["statuses"=>$statuses]);
     }
 }
