@@ -134,7 +134,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        wire:click='resetInputs'>لغو</button>
                     <button type="button" class="btn btn-primary" wire:click='store'
                         data-dismiss="modal">ثبت</button>
                 </div>
@@ -147,20 +148,77 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">افزودن وضعیت</h5>
+                    <h5 class="modal-title" id="updateModalLabel">ویرایش وظیفه</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name'
-                        required>
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
+                    <div class="form-row">
+                        <div class="form-group col-md-6 text-right">
+                            <label for="description">توضیحات</label>
+                            <textarea class="form-control text-right" id="description" wire:model.lazy="description" rows="3" required>   
+                                </textarea>
+                            @error('description')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-6 text-right">
+                            <label for="name">نام</label>
+                            <input type="text" class="form-control text-right" wire:model.lazy="name"
+                                id="name" placeholder="نام" required autocomplete="off">
+                            @error('name')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 text-right">
+                            @can('add-task-for-users')
+                                <label for="users">کاربران</label>
+                                <select multiple class="form-control" id="users" wire:model.lazy="users">
+                                    @foreach ($all_users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            @endcan
+                        </div>
+                        <div class="form-group col-md-6 text-right">
+                            <label for="role">وضعیت</label>
+                            <select id="role" class="form-control text-right" wire:model.lazy="status">
+                                @foreach ($statuses as $status)
+                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('role')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 text-right">
+                            <label for="finished_at">پایان</label>
+                            <input type="text" class="form-control text-right finished_at"
+                                value="{{ $finish_time }}" id="finished_at" required autocomplete="off">
+                            <input type="hidden" wire:model.defer='finished_at' class="observer-example-alt">
+                            @error('finished_at')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="form-group col-md-6 text-right">
+                            <label for="started_at">شروع</label>
+                            <input type="text" class="form-control text-right started_at"
+                                value="{{ $start_time }}" id="started_at" required autocomplete="off">
+                            <input type="hidden" wire:model.defer='started_at' class="observer-example-alt">
+                            @error('started_at')
+                                <div class="alert alert-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        wire:click='resetInputs'>لغو</button>
                     <button type="button" class="btn btn-primary" wire:click='update'
                         data-dismiss="modal">ثبت</button>
                 </div>
@@ -182,7 +240,8 @@
                     آیا از حذف این وضعیت اطمینان دارید؟
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        wire:click='resetInputs'>لغو</button>
                     <button type="button" class="btn btn-primary" wire:click='delete'
                         data-dismiss="modal">حذف</button>
                 </div>

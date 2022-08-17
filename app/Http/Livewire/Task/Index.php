@@ -81,6 +81,14 @@ class Index extends Component
     
     public function setCurrentTask(Task $task){
         $this->currentTask = $task;
+        $this->name = $task->name;
+        $this->description = $task->description;
+        $this->status = $task->task_status_id;
+        $this->started_at = $task->started_at;
+        $this->finished_at = $task->finished_at;
+        $this->start_time  = \Morilog\Jalali\Jalalian::forge($task->started_at)->format('%A %d %B %Y');
+        $this->finish_time  = \Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y');
+        $this->users = $task->users()->get()->pluck('id');
     }
 
     public function delete(){
@@ -91,7 +99,6 @@ class Index extends Component
     }
 
     public function store(){
-        // dd($this->status);
         abort_unless(auth()->user()->can('task-create'), '403', 'Unauthorized.');
         $this->started_at = Carbon::parse($this->started_at);
         $this->finished_at = Carbon::parse($this->finished_at);
@@ -120,7 +127,28 @@ class Index extends Component
 
     public function update(){
         abort_unless(auth()->user()->can('task-edit'), '403', 'Unauthorized.');
+        $this->started_at = Carbon::parse($this->started_at);
+        $this->finished_at = Carbon::parse($this->finished_at);
+        $validateData = $this->validate([
+            "name"=>["required", "min:3","max:30"],
+            "status"=>["required", "exists:task_statuses,id"],
+            "started_at"=>["required", "date","after:yesterday","before:finished_at"],
+            "finished_at"=>["required", "date","after:started_at"],
+            "description"=>["min:10","max:200"],
+            "users"=>["exists:users,id"],
+        ]);
 
+        $this->currentTask->update([
+            "name"=>$this->name,
+            "task_status_id"=>$this->status,
+            "description"=>$this->description,
+            "started_at"=>$this->started_at,
+            "finished_at"=>$this->finished_at,
+        ]);
+
+        $this->currentTask->users()->sync($this->users);
+        $this->resetInputs();
+        $this->emit('taskChanged');
     }
 
     public function render()
