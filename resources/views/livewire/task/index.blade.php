@@ -5,6 +5,7 @@
         <div class="d-flex flex-row justify-content-between">
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
+                {{-- <livewire:task.create /> --}}
             </div>
         </div>
     </div>
@@ -60,7 +61,7 @@
         {{$tasks->links() }}
     </div>
     {{-- create modal --}}
-    <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
+    {{-- <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
         aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -142,6 +143,10 @@
                 </div>
             </div>
         </div>
+    </div> --}}
+    <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
+        aria-labelledby="createModalLabel" aria-hidden="true">
+        <livewire:task.create />
     </div>
     {{-- update modal --}}
     <div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" role="dialog"

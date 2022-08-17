@@ -3,19 +3,13 @@
 namespace App\Http\Livewire\Task;
 
 use Livewire\Component;
+use App\Models\User;
 use App\Models\Task;
 use App\Models\TaskStatus;
-use App\Models\User;
 use Carbon\Carbon;
-use Livewire\WithPagination;
 
-class Index extends Component
+class Create extends Component
 {
-    use WithPagination;
-
-    protected $paginationTheme = 'bootstrap';
-
-    // public $tasks;
     public $current_task;
     public $name;
     public $description;
@@ -28,8 +22,7 @@ class Index extends Component
     public $start_time;
     public $finish_time;
 
-    // protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt"];
-    protected $listeners = ["setStartedAt","setFinishedAt","taskAdded","cancel","resetInputs"];
+    protected $listeners = ["setStartedAt","setFinishedAt"];
 
     public function resetInputs(){
         $this->current_task = null;
@@ -41,51 +34,16 @@ class Index extends Component
         $this->status = null;
         $this->start_time = null;
         $this->finish_time = null;
+        $this->emitUp("cancel");
     }
 
     public function mount(){
         if(auth()->user()->can('add-task-for-users')){
             $this->all_users = User::all();
         }
-        // if(auth()->user()->can('see-all-tasks')){
-        //     $this->tasks = Task::all();
-        // }
-        // else{
-        //     $this->tasks = auth()->user()->tasks;
-        // }
         $this->statuses = TaskStatus::all();
         $this->users = [auth()->user()->id];
     }
-
-    public function taskAdded(){
-        if(auth()->user()->can('see-all-tasks')){
-            $this->tasks = Task::paginate(2);
-        }
-        else{
-            $this->tasks = auth()->user()->tasks()->paginate(2);
-        }
-    }
-
-    public function cancel(){
-        $this->render();
-    }
-    // public function taskRemoved(){
-    //     if(auth()->user()->can('see-all-tasks')){
-    //         $this->tasks = Task::all();
-    //     }
-    //     else{
-    //         $this->tasks = auth()->user()->tasks;
-    //     }
-    // }
-
-    // public function taskChanged(){
-    //     if(auth()->user()->can('see-all-tasks')){
-    //         $this->tasks = Task::all();
-    //     }
-    //     else{
-    //         $this->tasks = auth()->user()->tasks;
-    //     }
-    // }
     
     public function setCurrentTask(Task $task){
         $this->currentTask = $task;
@@ -97,13 +55,6 @@ class Index extends Component
         $this->start_time  = \Morilog\Jalali\Jalalian::forge($task->started_at)->format('%A %d %B %Y');
         $this->finish_time  = \Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y');
         $this->users = $task->users()->get()->pluck('id');
-    }
-
-    public function delete(){
-        abort_unless(auth()->user()->can('task-delete'), '403', 'Unauthorized.');
-        $this->currentTask->delete();
-        $this->resetInputs();
-        // $this->emit('taskRemoved');
     }
 
     public function store(){
@@ -130,45 +81,11 @@ class Index extends Component
 
         $task->users()->sync($this->users);
         $this->resetInputs();
-        // $this->emit('taskAdded');
+        $this->emitUp("taskAdded");
     }
-
-    public function update(){
-        abort_unless(auth()->user()->can('task-edit'), '403', 'Unauthorized.');
-        $this->started_at = Carbon::parse($this->started_at);
-        $this->finished_at = Carbon::parse($this->finished_at);
-        $validateData = $this->validate([
-            "name"=>["required", "min:3","max:30"],
-            "status"=>["required", "exists:task_statuses,id"],
-            "started_at"=>["required", "date","after:yesterday","before:finished_at"],
-            "finished_at"=>["required", "date","after:started_at"],
-            "description"=>["min:10","max:200"],
-            "users"=>["exists:users,id"],
-        ]);
-
-        $this->currentTask->update([
-            "name"=>$this->name,
-            "task_status_id"=>$this->status,
-            "description"=>$this->description,
-            "started_at"=>$this->started_at,
-            "finished_at"=>$this->finished_at,
-        ]);
-
-        $this->currentTask->users()->sync($this->users);
-        $this->resetInputs();
-        // $this->emit('taskChanged');
-    }
-
     public function render()
     {
-        abort_unless(auth()->user()->can('task-list'), '403', 'Unauthorized.');
-        if(auth()->user()->can('see-all-tasks')){
-            $tasks = Task::paginate(2);
-        }
-        else{
-            $tasks = auth()->user()->tasks()->paginate(2);
-        }
-        return view('livewire.task.index',["tasks"=>$tasks]);
+        return view('livewire.task.create');
     }
 
     public function setStartedAt($value){

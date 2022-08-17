@@ -23,6 +23,10 @@
                     class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.permissions.index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('livewire.permissions.index') }}">دسترسی‌ها</a>
                 </li>
+                <li
+                    class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.calenders.index' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('livewire.calenders.index') }}">تقویم</a>
+                </li>
             {{-- @endcan --}}
             <li
                 class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.tasks.index' ? 'active' : '' }}">

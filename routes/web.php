@@ -28,5 +28,6 @@ Route::group(["middleware"=>"auth"],function(){
     Route::get('/livewire/statuses',App\Http\Livewire\Taskstatus\Index::class)->name('livewire.status.index');
     Route::get('/livewire/roles',App\Http\Livewire\Role\Index::class)->name('livewire.roles.index');
     Route::get('/livewire/permissions',App\Http\Livewire\Permission\Index::class)->name('livewire.permissions.index');
+    Route::get('/livewire/calender',App\Http\Livewire\Calender\Index::class)->name('livewire.calenders.index');
 });
 
