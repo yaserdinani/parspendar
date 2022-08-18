@@ -51,7 +51,7 @@
                 </span>
                 <i class="fa fa-bars fa-1x" aria-hidden="true"></i>
             </div>
-            <div class="events-items-container p-5">
+            <div class="events-items-container p-2">
                 @if ($task_flag)
                     <dl class="text-right">
                         <dt class="text-success">

@@ -60,8 +60,8 @@
                     </select>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='store' data-dismiss="modal">ثبت</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-outline-primary" wire:click='store' data-dismiss="modal">ثبت</button>
                 </div>
             </div>
         </div>
@@ -89,8 +89,8 @@
                     </select>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='update'
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-outline-primary" wire:click='update'
                         data-dismiss="modal">ثبت</button>
                 </div>
             </div>
@@ -111,8 +111,8 @@
                     آیا از حذف این وضعیت اطمینان دارید؟
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='delete'
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-outline-primary" wire:click='delete'
                         data-dismiss="modal">حذف</button>
                 </div>
             </div>

@@ -117,8 +117,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='store'>ثبت</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-outline-primary" wire:click='store'>ثبت</button>
                 </div>
             </div>
         </div>
@@ -193,8 +193,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='update'>ثبت</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-outline-primary" wire:click='update'>ثبت</button>
                 </div>
             </div>
         </div>
@@ -214,8 +214,8 @@
                     آیا از حذف این کاربر اطمینان دارید؟
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='delete' data-dismiss="modal">حذف</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
+                    <button type="button" class="btn btn-outline-primary" wire:click='delete' data-dismiss="modal">حذف</button>
                 </div>
             </div>
         </div>
