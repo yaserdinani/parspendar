@@ -12,7 +12,6 @@ class AppointmentsCalendar extends LivewireCalendar
 {
     public function events() : Collection
     {
-        $this->emitUp('getTasksOfMonth');
         return Task::query()
             ->whereDate('started_at', '>=', $this->gridStartsAt)
             ->whereDate('started_at', '<=', $this->gridEndsAt)
@@ -27,13 +26,8 @@ class AppointmentsCalendar extends LivewireCalendar
             });
 
     }
-    public function onDayClick($year, $month, $day)
-    {
-        dd($year, $month, $day);
-    }
     public function onEventClick($eventId)
     {
-        // dd($eventId);
         $this->emitUp('setTask',$eventId);
     }
 }

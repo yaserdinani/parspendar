@@ -100,7 +100,7 @@
             width: 100%;
             background-color: #fff;
             border-radius: 8px;
-            height: 45vh;
+            height: 48vh;
         }
 
         .events-container-header {
@@ -117,35 +117,7 @@
         .events-items-container {
             overflow: hidden;
             overflow-y: scroll;
-            height: 38vh;
-        }
-
-        .events-items-contents {
-            color: #000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .event-item-right {
-            display: flex;
-            flex-direction: column;
-            width: 70%;
-        }
-
-        .sell-team {
-            background-color: orange;
-        }
-
-        .programmer-team {
-            background-color: purple;
-        }
-
-        .event-title {
-            display: flex;
-            align-items: center;
-            width: inherit;
-            gap: 5%;
+            height: 32vh;
         }
     </style>
 </head>

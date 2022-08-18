@@ -5,7 +5,6 @@
         <div class="d-flex flex-row justify-content-between">
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
-                {{-- <livewire:task.create /> --}}
             </div>
         </div>
     </div>
@@ -58,10 +57,10 @@
                 @endforeach
             </tbody>
         </table>
-        {{$tasks->links() }}
+        {{ $tasks->links() }}
     </div>
     {{-- create modal --}}
-    {{-- <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
+    <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
         aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -136,17 +135,13 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
                         wire:click='resetInputs'>لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='store'
+                    <button type="button" class="btn btn-outline-primary" wire:click='store'
                         data-dismiss="modal">ثبت</button>
                 </div>
             </div>
         </div>
-    </div> --}}
-    <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
-        aria-labelledby="createModalLabel" aria-hidden="true">
-        <livewire:task.create />
     </div>
     {{-- update modal --}}
     <div wire:ignore.self class="modal fade" id="updateModal" tabindex="-1" role="dialog"
@@ -223,9 +218,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
                         wire:click='resetInputs'>لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='update'
+                    <button type="button" class="btn btn-outline-primary" wire:click='update'
                         data-dismiss="modal">ثبت</button>
                 </div>
             </div>
@@ -246,9 +241,9 @@
                     آیا از حذف این وضعیت اطمینان دارید؟
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
                         wire:click='resetInputs'>لغو</button>
-                    <button type="button" class="btn btn-primary" wire:click='delete'
+                    <button type="button" class="btn btn-outline-primary" wire:click='delete'
                         data-dismiss="modal">حذف</button>
                 </div>
             </div>

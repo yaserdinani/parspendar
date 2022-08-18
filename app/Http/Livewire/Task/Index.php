@@ -27,9 +27,11 @@ class Index extends Component
     public $all_users;
     public $start_time;
     public $finish_time;
+    public $create_flag = false;
+    public $update_flag = false;
 
-    // protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt"];
-    protected $listeners = ["setStartedAt","setFinishedAt","taskAdded","cancel","resetInputs"];
+    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt"];
+    // protected $listeners = ["setStartedAt","setFinishedAt","taskAdded","resetInputs","cancleTaskCreate"];
 
     public function resetInputs(){
         $this->current_task = null;
@@ -47,28 +49,22 @@ class Index extends Component
         if(auth()->user()->can('add-task-for-users')){
             $this->all_users = User::all();
         }
-        // if(auth()->user()->can('see-all-tasks')){
-        //     $this->tasks = Task::all();
-        // }
-        // else{
-        //     $this->tasks = auth()->user()->tasks;
-        // }
         $this->statuses = TaskStatus::all();
         $this->users = [auth()->user()->id];
     }
 
-    public function taskAdded(){
-        if(auth()->user()->can('see-all-tasks')){
-            $this->tasks = Task::paginate(2);
-        }
-        else{
-            $this->tasks = auth()->user()->tasks()->paginate(2);
-        }
-    }
+    // public function showCreateForm(){
+    //     $this->create_flag = true;
+    // }
 
-    public function cancel(){
-        $this->render();
-    }
+    // public function taskAdded(){
+    //     $this->create_flag = false;
+    // }
+
+    // public function cancleTaskCreate(){
+    //     $this->create_flag = false;
+    // }
+
     // public function taskRemoved(){
     //     if(auth()->user()->can('see-all-tasks')){
     //         $this->tasks = Task::all();
@@ -130,7 +126,6 @@ class Index extends Component
 
         $task->users()->sync($this->users);
         $this->resetInputs();
-        // $this->emit('taskAdded');
     }
 
     public function update(){
@@ -163,10 +158,10 @@ class Index extends Component
     {
         abort_unless(auth()->user()->can('task-list'), '403', 'Unauthorized.');
         if(auth()->user()->can('see-all-tasks')){
-            $tasks = Task::paginate(2);
+            $tasks = Task::paginate(5);
         }
         else{
-            $tasks = auth()->user()->tasks()->paginate(2);
+            $tasks = auth()->user()->tasks()->paginate(5);
         }
         return view('livewire.task.index',["tasks"=>$tasks]);
     }
