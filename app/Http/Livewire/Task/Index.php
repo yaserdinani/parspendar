@@ -29,8 +29,9 @@ class Index extends Component
     public $finish_time;
     public $create_flag = false;
     public $update_flag = false;
+    public $inputs=[];
 
-    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt"];
+    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus"];
     // protected $listeners = ["setStartedAt","setFinishedAt","taskAdded","resetInputs","cancleTaskCreate"];
 
     public function resetInputs(){
@@ -43,6 +44,12 @@ class Index extends Component
         $this->status = null;
         $this->start_time = null;
         $this->finish_time = null;
+    }
+
+    public function updateTaskStatus(Task $task,$value){
+        $task->update([
+            "task_status_id" => $value
+        ]);
     }
 
     public function mount(){

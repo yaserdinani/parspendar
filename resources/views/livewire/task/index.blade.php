@@ -33,7 +33,14 @@
                         <td>{{ $task->name }}</td>
                         <td>{{ $task->description }}</td>
                         <td>
-                            <span>{{ $task->taskStatus->name }}</span>
+                            <select class="form-control"
+                                wire:change="$emit('updateTaskStatus',{{ $task->id }},$event.target.value)">
+                                @foreach ($statuses as $status)
+                                    <option value="{{ $status->id }}"
+                                        {{ $status->id == $task->task_status_id ? 'selected="selected"' : '' }}>
+                                        {{ $status->name }}</option>
+                                @endforeach
+                            </select>
                         </td>
                         <td>
                             {{ \Morilog\Jalali\Jalalian::forge($task->started_at)->format('%A %d %B %Y') }}
@@ -75,7 +82,7 @@
                         <div class="form-group col-md-6 text-right">
                             <label for="description">توضیحات</label>
                             <textarea class="form-control text-right" id="description" wire:model.defer="description" rows="3" required>
-                                {{ old('description') }}    
+                                   
                             </textarea>
                             @error('description')
                                 <div class="alert alert-danger">{{ $message }}</div>

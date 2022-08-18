@@ -117,7 +117,7 @@
         .events-items-container {
             overflow: hidden;
             overflow-y: scroll;
-            height: 32vh;
+            height: 42vh;
         }
     </style>
 </head>
