@@ -2,7 +2,7 @@
 <div class="card">
     <div class="card-header">
         <h3>همه‌ی نقش‌ها</h3>
-        <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-row-reverse justify-content-between">
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
             </div>
