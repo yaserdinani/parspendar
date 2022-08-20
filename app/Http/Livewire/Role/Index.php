@@ -19,6 +19,7 @@ class Index extends Component
     // public $roles;
     // protected $listeners = ['roleAdded','roleChanged','roleRemoved'];
     public $all_permissions;
+    public $filter_text;
 
     public function mount(){
         // $this->roles = Role::all();
@@ -91,7 +92,9 @@ class Index extends Component
     public function render()
     {
         abort_unless(auth()->user()->can('role-list'), '403', 'Unauthorized.');
-        $roles = Role::paginate(2);
+        $roles = Role::select("*")
+        ->where('name',"LIKE","%".$this->filter_text."%")
+        ->paginate(2);
         return view('livewire.role.index',["roles"=>$roles]);
     }
 }
