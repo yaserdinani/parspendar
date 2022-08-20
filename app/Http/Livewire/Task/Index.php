@@ -8,14 +8,14 @@ use App\Models\TaskStatus;
 use App\Models\User;
 use Carbon\Carbon;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination;
+    use WithPagination,LivewireAlert;
 
     protected $paginationTheme = 'bootstrap';
 
-    // public $tasks;
     public $current_task;
     public $name;
     public $description;
@@ -38,7 +38,6 @@ class Index extends Component
     public $filter_finished_time;
 
     protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt"];
-    // protected $listeners = ["setStartedAt","setFinishedAt","taskAdded","resetInputs","cancleTaskCreate"];
 
     public function resetInputs(){
         $this->current_task = null;
@@ -50,6 +49,7 @@ class Index extends Component
         $this->status = null;
         $this->start_time = null;
         $this->finish_time = null;
+        $this->resetValidation();
     }
 
     public function updateTaskStatus(Task $task,$value){
@@ -57,6 +57,7 @@ class Index extends Component
         $task->update([
             "task_status_id" => $value
         ]);
+        $this->alert('success', 'وضعیت وظیفه تغییر یافت');
     }
 
     public function mount(){
@@ -66,36 +67,6 @@ class Index extends Component
         $this->statuses = TaskStatus::all();
         $this->users = [auth()->user()->id];
     }
-
-    // public function showCreateForm(){
-    //     $this->create_flag = true;
-    // }
-
-    // public function taskAdded(){
-    //     $this->create_flag = false;
-    // }
-
-    // public function cancleTaskCreate(){
-    //     $this->create_flag = false;
-    // }
-
-    // public function taskRemoved(){
-    //     if(auth()->user()->can('see-all-tasks')){
-    //         $this->tasks = Task::all();
-    //     }
-    //     else{
-    //         $this->tasks = auth()->user()->tasks;
-    //     }
-    // }
-
-    // public function taskChanged(){
-    //     if(auth()->user()->can('see-all-tasks')){
-    //         $this->tasks = Task::all();
-    //     }
-    //     else{
-    //         $this->tasks = auth()->user()->tasks;
-    //     }
-    // }
     
     public function setCurrentTask(Task $task){
         $this->currentTask = $task;
@@ -113,7 +84,7 @@ class Index extends Component
         abort_unless(auth()->user()->can('task-delete'), '403', 'Unauthorized.');
         $this->currentTask->delete();
         $this->resetInputs();
-        // $this->emit('taskRemoved');
+        $this->alert('success', 'وظیفه به سطل زباله انتقال یافت');
     }
 
     public function store(){
@@ -140,6 +111,7 @@ class Index extends Component
 
         $task->users()->sync($this->users);
         $this->resetInputs();
+        $this->alert('success', 'وظیفه ایجاد شد');
     }
 
     public function update(){
@@ -164,30 +136,25 @@ class Index extends Component
         ]);
 
         $this->currentTask->users()->sync($this->users);
-        $this->resetInputs();
-        // $this->emit('taskChanged');
+        $this->alert('success', 'وظیفه ویرایش شد');
     }
 
     public function render()
     {
         abort_unless(auth()->user()->can('task-list'), '403', 'Unauthorized.');
         if(auth()->user()->can('see-all-tasks')){
-            if(isset($this->filter_started_at) && isset($this->filter_finished_at)){
+            if($this->filter_type ==0){
+                $tasks = Task::paginate(5);
+                $this->filter_text = "";
+                $this->filter_finished_at = null;
+                $this->filter_started_time = null;
+                $this->filter_finished_at = null;
+                $this->filter_finished_time = null;
+            }
+            else if(isset($this->filter_started_at) && isset($this->filter_finished_at)){
                 $tasks = Task::select("*")
             ->where("name","LIKE","%".$this->filter_text."%")
             ->where("started_at",">=",Carbon::parse($this->filter_started_at))
-            ->where("finished_at","<=",Carbon::parse($this->filter_finished_at))
-            ->paginate(5);
-            }
-            else if(isset($this->filter_started_at)){
-                $tasks = Task::select("*")
-            ->where("name","LIKE","%".$this->filter_text."%")
-            ->where("started_at",">=",Carbon::parse($this->filter_started_at))
-            ->paginate(5);
-            }
-            else if(isset($this->filter_finished_at)){
-                $tasks = Task::select("*")
-            ->where("name","LIKE","%".$this->filter_text."%")
             ->where("finished_at","<=",Carbon::parse($this->filter_finished_at))
             ->paginate(5);
             }
@@ -204,22 +171,18 @@ class Index extends Component
             }
         }
         else{
-            if(isset($this->filter_started_at) && isset($this->filter_finished_at)){
+            if($this->filter_type ==0){
+                $this->filter_text = "";
+                $this->filter_finished_at = null;
+                $this->filter_started_time = null;
+                $this->filter_finished_at = null;
+                $this->filter_finished_time = null;
+                $tasks = auth()->user()->tasks()->paginate(5);
+            }
+            else if(isset($this->filter_started_at) && isset($this->filter_finished_at)){
                 $tasks = auth()->user()->tasks()
             ->where("name","LIKE","%".$this->filter_text."%")
             ->where("started_at",">=",Carbon::parse($this->filter_started_at))
-            ->where("finished_at","<=",Carbon::parse($this->filter_finished_at))
-            ->paginate(5);
-            }
-            else if(isset($this->filter_started_at)){
-                $tasks = auth()->user()->tasks()
-            ->where("name","LIKE","%".$this->filter_text."%")
-            ->where("started_at",">=",Carbon::parse($this->filter_started_at))
-            ->paginate(5);
-            }
-            else if(isset($this->filter_finished_at)){
-                $tasks = auth()->user()->tasks()
-            ->where("name","LIKE","%".$this->filter_text."%")
             ->where("finished_at","<=",Carbon::parse($this->filter_finished_at))
             ->paginate(5);
             }

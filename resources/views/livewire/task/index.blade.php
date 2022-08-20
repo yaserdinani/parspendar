@@ -16,7 +16,7 @@
                 value="{{ $filter_finished_time }}" placeholder="تاریخ پایان">
             <input type="hidden" wire:model.lazy='filter_finished_at' class="observer-example-alt">
             <select class="col-md-2 mx-1 form-control" wire:model.lazy='filter_type'>
-                <option value="0">انتخاب کنید</option>
+                <option value="0">همه</option>
                 @foreach ($statuses as $status)
                     <option value="{{ $status->id }}">{{ $status->name }}</option>
                 @endforeach
@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="card-body">
-        <table class="table table-bordered" dir="rtl">
+        <table class="table table-bordered text-center" dir="rtl">
             <thead>
                 <tr>
                     <th scope="col">شناسه</th>
@@ -45,8 +45,8 @@
                 @foreach ($tasks as $task)
                     <tr>
                         <th scope="row">{{ $task->id }}</th>
-                        <td>{{ $task->name }}</td>
-                        <td>{{ $task->description }}</td>
+                        <td class="text-right">{{ $task->name }}</td>
+                        <td class="text-right">{{ $task->description }}</td>
                         <td>
                             <select class="form-control"
                                 wire:change="$emit('updateTaskStatus',{{ $task->id }},$event.target.value)">
@@ -57,10 +57,10 @@
                                 @endforeach
                             </select>
                         </td>
-                        <td>
+                        <td class="text-right">
                             {{ \Morilog\Jalali\Jalalian::forge($task->started_at)->format('%A %d %B %Y') }}
                         </td>
-                        <td>
+                        <td class="text-right">
                             {{ \Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y') }}
                         </td>
                         @can('task-edit')
@@ -93,74 +93,73 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-row">
-                        <div class="form-group col-md-6 text-right">
-                            <label for="description">توضیحات</label>
-                            <textarea class="form-control text-right" id="description" wire:model.defer="description" rows="3" required>
+                    <form wire:submit.prevent='store'>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 text-right">
+                                <label for="description">توضیحات</label>
+                                <textarea class="form-control text-right" id="description" wire:model.defer="description" rows="3" required>
                                    
                             </textarea>
-                            @error('description')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                                @error('description')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label for="name">نام</label>
+                                <input type="text" class="form-control text-right" wire:model.defer="name"
+                                    id="name" placeholder="نام" required autocomplete="off">
+                                @error('name')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="form-group col-md-6 text-right">
-                            <label for="name">نام</label>
-                            <input type="text" class="form-control text-right" wire:model.defer="name"
-                                id="name" placeholder="نام" required autocomplete="off">
-                            @error('name')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 text-right">
-                            @can('add-task-for-users')
-                                <label for="users">کاربران</label>
-                                <select multiple class="form-control" id="users" wire:model.defer="users">
-                                    @foreach ($all_users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 text-right">
+                                @can('add-task-for-users')
+                                    <label for="users">کاربران</label>
+                                    <select multiple class="form-control" id="users" wire:model.defer="users">
+                                        @foreach ($all_users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @endcan
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label for="role">وضعیت</label>
+                                <select id="role" class="form-control text-right" wire:model.defer="status">
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
                                     @endforeach
                                 </select>
-                            @endcan
+                                @error('role')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="form-group col-md-6 text-right">
-                            <label for="role">وضعیت</label>
-                            <select id="role" class="form-control text-right" wire:model.defer="status">
-                                @foreach ($statuses as $status)
-                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('role')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                        <div class="form-row">
+                            <div class="form-group col-md-6 text-right">
+                                <label for="finished_at">پایان</label>
+                                <input type="text" class="form-control text-right finished_at"
+                                    value="{{ $finish_time }}" id="finished_at" required autocomplete="off">
+                                <input type="hidden" wire:model.defer='finished_at' class="observer-example-alt">
+                                @error('finished_at')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label for="started_at">شروع</label>
+                                <input type="text" class="form-control text-right started_at"
+                                    value="{{ $start_time }}" id="started_at" required autocomplete="off">
+                                <input type="hidden" wire:model.defer='started_at' class="observer-example-alt">
+                                @error('started_at')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 text-right">
-                            <label for="finished_at">پایان</label>
-                            <input type="text" class="form-control text-right finished_at"
-                                value="{{ $finish_time }}" id="finished_at" required autocomplete="off">
-                            <input type="hidden" wire:model.defer='finished_at' class="observer-example-alt">
-                            @error('finished_at')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-6 text-right">
-                            <label for="started_at">شروع</label>
-                            <input type="text" class="form-control text-right started_at"
-                                value="{{ $start_time }}" id="started_at" required autocomplete="off">
-                            <input type="hidden" wire:model.defer='started_at' class="observer-example-alt">
-                            @error('started_at')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-                        wire:click='resetInputs'>لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='store'
-                        data-dismiss="modal">ثبت</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                            wire:click='resetInputs'>لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -177,73 +176,72 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-row">
-                        <div class="form-group col-md-6 text-right">
-                            <label for="description">توضیحات</label>
-                            <textarea class="form-control text-right" id="description" wire:model.lazy="description" rows="3" required>   
+                    <form wire:submit.prevent='update'>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 text-right">
+                                <label for="description">توضیحات</label>
+                                <textarea class="form-control text-right" id="description" wire:model.lazy="description" rows="3" required>   
                                 </textarea>
-                            @error('description')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                                @error('description')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label for="name">نام</label>
+                                <input type="text" class="form-control text-right" wire:model.lazy="name"
+                                    id="name" placeholder="نام" required autocomplete="off">
+                                @error('name')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="form-group col-md-6 text-right">
-                            <label for="name">نام</label>
-                            <input type="text" class="form-control text-right" wire:model.lazy="name"
-                                id="name" placeholder="نام" required autocomplete="off">
-                            @error('name')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 text-right">
-                            @can('add-task-for-users')
-                                <label for="users">کاربران</label>
-                                <select multiple class="form-control" id="users" wire:model.lazy="users">
-                                    @foreach ($all_users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 text-right">
+                                @can('add-task-for-users')
+                                    <label for="users">کاربران</label>
+                                    <select multiple class="form-control" id="users" wire:model.lazy="users">
+                                        @foreach ($all_users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                @endcan
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label for="role">وضعیت</label>
+                                <select id="role" class="form-control text-right" wire:model.lazy="status">
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
                                     @endforeach
                                 </select>
-                            @endcan
+                                @error('role')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="form-group col-md-6 text-right">
-                            <label for="role">وضعیت</label>
-                            <select id="role" class="form-control text-right" wire:model.lazy="status">
-                                @foreach ($statuses as $status)
-                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('role')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
+                        <div class="form-row">
+                            <div class="form-group col-md-6 text-right">
+                                <label for="finished_at">پایان</label>
+                                <input type="text" class="form-control text-right finished_at"
+                                    value="{{ $finish_time }}" id="finished_at" required autocomplete="off">
+                                <input type="hidden" wire:model.defer='finished_at' class="observer-example-alt">
+                                @error('finished_at')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label for="started_at">شروع</label>
+                                <input type="text" class="form-control text-right started_at"
+                                    value="{{ $start_time }}" id="started_at" required autocomplete="off">
+                                <input type="hidden" wire:model.defer='started_at' class="observer-example-alt">
+                                @error('started_at')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6 text-right">
-                            <label for="finished_at">پایان</label>
-                            <input type="text" class="form-control text-right finished_at"
-                                value="{{ $finish_time }}" id="finished_at" required autocomplete="off">
-                            <input type="hidden" wire:model.defer='finished_at' class="observer-example-alt">
-                            @error('finished_at')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md-6 text-right">
-                            <label for="started_at">شروع</label>
-                            <input type="text" class="form-control text-right started_at"
-                                value="{{ $start_time }}" id="started_at" required autocomplete="off">
-                            <input type="hidden" wire:model.defer='started_at' class="observer-example-alt">
-                            @error('started_at')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
-                        wire:click='resetInputs'>لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='update'
-                        data-dismiss="modal">ثبت</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                            wire:click='resetInputs'>لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -285,13 +283,13 @@
                     });
                 }),
                 $(".started_at").persianDatepicker({
-                        initialValue: false,
-                        autoClose: true,
-                        onSelect: function(unix) {
-                            Livewire.emit('setStartedAt', new persianDate(unix).unix())
-                        },
-                    });
-                $(".finished_at").click(function() {
+                    initialValue: false,
+                    autoClose: true,
+                    onSelect: function(unix) {
+                        Livewire.emit('setStartedAt', new persianDate(unix).unix())
+                    },
+                });
+            $(".finished_at").click(function() {
                     $(".finished_at").persianDatepicker({
                         initialValue: false,
                         autoClose: true,
@@ -301,13 +299,13 @@
                     });
                 }),
                 $(".finished_at").persianDatepicker({
-                        initialValue: false,
-                        autoClose: true,
-                        onSelect: function(unix) {
-                            Livewire.emit('setFinishedAt', new persianDate(unix).unix())
-                        },
-                    });
-                $(".filter_finished_at").click(function() {
+                    initialValue: false,
+                    autoClose: true,
+                    onSelect: function(unix) {
+                        Livewire.emit('setFinishedAt', new persianDate(unix).unix())
+                    },
+                });
+            $(".filter_finished_at").click(function() {
                     $(".filter_finished_at").persianDatepicker({
                         initialValue: false,
                         autoClose: true,
@@ -317,13 +315,13 @@
                     });
                 }),
                 $(".filter_finished_at").persianDatepicker({
-                        initialValue: false,
-                        autoClose: true,
-                        onSelect: function(unix) {
-                            Livewire.emit('setFilterFinishedAt', new persianDate(unix).unix())
-                        },
-                    });
-                $(".filter_started_at").click(function() {
+                    initialValue: false,
+                    autoClose: true,
+                    onSelect: function(unix) {
+                        Livewire.emit('setFilterFinishedAt', new persianDate(unix).unix())
+                    },
+                });
+            $(".filter_started_at").click(function() {
                     $(".filter_started_at").persianDatepicker({
                         initialValue: false,
                         autoClose: true,
@@ -333,12 +331,12 @@
                     });
                 }),
                 $(".filter_started_at").persianDatepicker({
-                        initialValue: false,
-                        autoClose: true,
-                        onSelect: function(unix) {
-                            Livewire.emit('setFilterStartedAt', new persianDate(unix).unix())
-                        },
-                    });
+                    initialValue: false,
+                    autoClose: true,
+                    onSelect: function(unix) {
+                        Livewire.emit('setFilterStartedAt', new persianDate(unix).unix())
+                    },
+                });
         });
     </script>
 @endpush
