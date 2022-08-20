@@ -2,10 +2,12 @@
 <div class="card">
     <div class="card-header">
         <h3>کاربران</h3>
-        <div class="d-flex flex-row-reverse justify-content-between">
+        <div class="d-flex flex-row-reverse">
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
             </div>
+            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1" wire:model.lazy='filter_text'
+                    placeholder="جستجو" id="filter_text" name="filter_text">
         </div>
     </div>
     <div class="card-body">
@@ -31,8 +33,9 @@
                         <td>
                             <select class="form-control"
                                 wire:change="$emit('updateUserStatus',{{ $user->id }},$event.target.value)">
-                                <option value="1" {{($user->is_active==true) ? " selected" : ""}}>فعال</option>
-                                <option value="0" {{($user->is_active==false) ? " selected" : ""}}>غیرفعال</option>
+                                <option value="1" {{ $user->is_active == true ? ' selected' : '' }}>فعال</option>
+                                <option value="0" {{ $user->is_active == false ? ' selected' : '' }}>غیرفعال
+                                </option>
                             </select>
                         </td>
                         <td>

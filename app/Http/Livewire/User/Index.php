@@ -27,6 +27,7 @@ class Index extends Component
     public $roles = [];
     public $all_roles;
     protected $listeners = ["updateUserStatus"];
+    public $filter_text;
 
     public function mount(){
         $this->statuses = TaskStatus::all();
@@ -126,7 +127,11 @@ class Index extends Component
     public function render()
     {
         abort_unless(auth()->user()->can('user-list'), '403', 'Unauthorized.');
-        $users = User::paginate(2);
+        $users = User::select("*")
+            ->where("name","LIKE","%".$this->filter_text."%")
+            ->orWhere("phone","LIKE","%".$this->filter_text."%")
+            ->orWhere("email","LIKE","%".$this->filter_text."%")
+            ->paginate(2);
         return view('livewire.user.index')
         ->with('users', $users);
     }
