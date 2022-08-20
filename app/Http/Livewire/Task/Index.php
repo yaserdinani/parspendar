@@ -30,8 +30,14 @@ class Index extends Component
     public $create_flag = false;
     public $update_flag = false;
     public $inputs=[];
+    public $filter_text;
+    public $filter_type;
+    public $filter_started_at;
+    public $filter_finished_at;
+    public $filter_started_time;
+    public $filter_finished_time;
 
-    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus"];
+    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt"];
     // protected $listeners = ["setStartedAt","setFinishedAt","taskAdded","resetInputs","cancleTaskCreate"];
 
     public function resetInputs(){
@@ -165,10 +171,68 @@ class Index extends Component
     {
         abort_unless(auth()->user()->can('task-list'), '403', 'Unauthorized.');
         if(auth()->user()->can('see-all-tasks')){
-            $tasks = Task::paginate(5);
+            if(isset($this->filter_started_at) && isset($this->filter_finished_at)){
+                $tasks = Task::select("*")
+            ->where("name","LIKE","%".$this->filter_text."%")
+            ->where("started_at",">=",Carbon::parse($this->filter_started_at))
+            ->where("finished_at","<=",Carbon::parse($this->filter_finished_at))
+            ->paginate(5);
+            }
+            else if(isset($this->filter_started_at)){
+                $tasks = Task::select("*")
+            ->where("name","LIKE","%".$this->filter_text."%")
+            ->where("started_at",">=",Carbon::parse($this->filter_started_at))
+            ->paginate(5);
+            }
+            else if(isset($this->filter_finished_at)){
+                $tasks = Task::select("*")
+            ->where("name","LIKE","%".$this->filter_text."%")
+            ->where("finished_at","<=",Carbon::parse($this->filter_finished_at))
+            ->paginate(5);
+            }
+            else if(isset($this->filter_type) && $this->filter_type !=0){
+                $tasks = Task::select("*")
+                ->where("name","LIKE","%".$this->filter_text."%")
+                ->where("task_status_id","=",$this->filter_type)
+                ->paginate(5);
+            }
+            else{
+                $tasks = Task::select("*")
+                ->where("name","LIKE","%".$this->filter_text."%")
+                ->paginate(5);
+            }
         }
         else{
-            $tasks = auth()->user()->tasks()->paginate(5);
+            if(isset($this->filter_started_at) && isset($this->filter_finished_at)){
+                $tasks = auth()->user()->tasks()
+            ->where("name","LIKE","%".$this->filter_text."%")
+            ->where("started_at",">=",Carbon::parse($this->filter_started_at))
+            ->where("finished_at","<=",Carbon::parse($this->filter_finished_at))
+            ->paginate(5);
+            }
+            else if(isset($this->filter_started_at)){
+                $tasks = auth()->user()->tasks()
+            ->where("name","LIKE","%".$this->filter_text."%")
+            ->where("started_at",">=",Carbon::parse($this->filter_started_at))
+            ->paginate(5);
+            }
+            else if(isset($this->filter_finished_at)){
+                $tasks = auth()->user()->tasks()
+            ->where("name","LIKE","%".$this->filter_text."%")
+            ->where("finished_at","<=",Carbon::parse($this->filter_finished_at))
+            ->paginate(5);
+            }
+            else if(isset($this->filter_type) && $this->filter_type !=0){
+                $tasks =auth()->user()->tasks()
+                ->where("name","LIKE","%".$this->filter_text."%")
+                ->where("task_status_id","=",$this->filter_type)
+                ->paginate(5);
+            }
+            else{
+                $tasks = auth()->user()->tasks()
+                ->where("name","LIKE","%".$this->filter_text."%")
+                ->paginate(5);
+            }
         }
         return view('livewire.task.index',["tasks"=>$tasks]);
     }
@@ -181,5 +245,15 @@ class Index extends Component
     public function setFinishedAt($value){
         $this->finished_at = $value;
         $this->finish_time  = \Morilog\Jalali\Jalalian::forge($this->finished_at)->format('%A %d %B %Y');
+    }
+
+    public function setFilterFinishedAt($value){
+        $this->filter_finished_at = $value;
+        $this->filter_finished_time = \Morilog\Jalali\Jalalian::forge($this->filter_finished_at)->format('%A %d %B %Y');
+    }
+
+    public function setFilterStartedAt($value){
+        $this->filter_started_at = $value;
+        $this->filter_started_time = \Morilog\Jalali\Jalalian::forge($this->filter_started_at)->format('%A %d %B %Y');
     }
 }

@@ -2,10 +2,25 @@
 <div class="card">
     <div class="card-header">
         <h3>همه‌ی وظایف</h3>
-        <div class="d-flex flex-row-reverse justify-content-between">
+        <div class="d-flex flex-row-reverse">
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
             </div>
+            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1"
+                wire:model.lazy='filter_text' placeholder="جستجو بر اساس نام و توضیحات" id="filter_text"
+                name="filter_text">
+            <input autocomplete="off" type="text" class="filter_started_at col-md-2 form-control text-right mx-1"
+                value="{{ $filter_started_time }}" placeholder="تاریخ شروع">
+            <input type="hidden" wire:model.lazy='filter_started_at' class="observer-example-alt">
+            <input autocomplete="off" type="text" class="filter_finished_at col-md-2 form-control text-right mx-1"
+                value="{{ $filter_finished_time }}" placeholder="تاریخ پایان">
+            <input type="hidden" wire:model.lazy='filter_finished_at' class="observer-example-alt">
+            <select class="col-md-2 mx-1 form-control" wire:model.lazy='filter_type'>
+                <option value="0">انتخاب کنید</option>
+                @foreach ($statuses as $status)
+                    <option value="{{ $status->id }}">{{ $status->name }}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     <div class="card-body">
@@ -270,28 +285,60 @@
                     });
                 }),
                 $(".started_at").persianDatepicker({
-                    initialValue: false,
-                    autoClose: true,
-                    onSelect: function(unix) {
-                        Livewire.emit('setStartedAt', new persianDate(unix).unix())
-                    },
-                });
-            $(".finished_at").click(function() {
+                        initialValue: false,
+                        autoClose: true,
+                        onSelect: function(unix) {
+                            Livewire.emit('setStartedAt', new persianDate(unix).unix())
+                        },
+                    });
+                $(".finished_at").click(function() {
+                    $(".finished_at").persianDatepicker({
+                        initialValue: false,
+                        autoClose: true,
+                        onSelect: function(unix) {
+                            Livewire.emit('setFinishedAt', new persianDate(unix).unix())
+                        },
+                    });
+                }),
                 $(".finished_at").persianDatepicker({
-                    initialValue: false,
-                    autoClose: true,
-                    onSelect: function(unix) {
-                        Livewire.emit('setFinishedAt', new persianDate(unix).unix())
-                    },
-                });
-            })
-            $(".finished_at").persianDatepicker({
-                initialValue: false,
-                autoClose: true,
-                onSelect: function(unix) {
-                    Livewire.emit('setFinishedAt', new persianDate(unix).unix())
-                },
-            });
+                        initialValue: false,
+                        autoClose: true,
+                        onSelect: function(unix) {
+                            Livewire.emit('setFinishedAt', new persianDate(unix).unix())
+                        },
+                    });
+                $(".filter_finished_at").click(function() {
+                    $(".filter_finished_at").persianDatepicker({
+                        initialValue: false,
+                        autoClose: true,
+                        onSelect: function(unix) {
+                            Livewire.emit('setFilterFinishedAt', new persianDate(unix).unix())
+                        },
+                    });
+                }),
+                $(".filter_finished_at").persianDatepicker({
+                        initialValue: false,
+                        autoClose: true,
+                        onSelect: function(unix) {
+                            Livewire.emit('setFilterFinishedAt', new persianDate(unix).unix())
+                        },
+                    });
+                $(".filter_started_at").click(function() {
+                    $(".filter_started_at").persianDatepicker({
+                        initialValue: false,
+                        autoClose: true,
+                        onSelect: function(unix) {
+                            Livewire.emit('setFilterStartedAt', new persianDate(unix).unix())
+                        },
+                    });
+                }),
+                $(".filter_started_at").persianDatepicker({
+                        initialValue: false,
+                        autoClose: true,
+                        onSelect: function(unix) {
+                            Livewire.emit('setFilterStartedAt', new persianDate(unix).unix())
+                        },
+                    });
         });
     </script>
 @endpush

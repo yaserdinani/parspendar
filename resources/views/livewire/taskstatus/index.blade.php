@@ -16,8 +16,12 @@
                 <tr>
                     <th scope="col">شناسه</th>
                     <th scope="col">عنوان</th>
+                    @can('status-edit')
                     <th scope="col">ویرایش</th>
+                    @endcan
+                    @can('status-delete')
                     <th scope="col">حذف</th>
+                    @endcan
                 </tr>
             </thead>
             <tbody>
@@ -25,14 +29,18 @@
                     <tr>
                         <th scope="row">{{ $status->id }}</th>
                         <td>{{ $status->name }}</td>
+                        @can('status-edit')
                         <td>
                             <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
                                 wire:click="edit({{ $status }})">ویرایش</a>
                         </td>
+                        @endcan
+                        @can('status-delete')
                         <td>
                             <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
                                 wire:click="setStatus({{ $status }})">حذف</a>
                         </td>
+                        @endcan
                     </tr>
                 @endforeach
             </tbody>

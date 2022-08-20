@@ -119,6 +119,7 @@ class Index extends Component
     }
 
     public function updateUserStatus(User $user,$value){
+        abort_unless(auth()->user()->can('change-user-status'), '403', 'Unauthorized.');
         $user->update([
             "is_active" => ($value==0) ? false : true
         ]);

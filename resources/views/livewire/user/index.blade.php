@@ -18,9 +18,16 @@
                     <th scope="col">نام و نام خانوادگی</th>
                     <th scope="col">شماره تماس</th>
                     <th scope="col">ایمیل</th>
-                    <th scope="col">وضعیت</th>
+                    @can('change-user-status')
+                        <th scope="col">وضعیت</th>
+                    @endcan
+                    @can('user-edit')
                     <th scope="col">ویرایش</th>
+                    @endcan
+                    @can('user-delete')
+                        
                     <th scope="col">حذف</th>
+                    @endcan
                 </tr>
             </thead>
             <tbody>
@@ -30,6 +37,7 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->phone }}</td>
                         <td>{{ $user->email }}</td>
+                        @can('change-user-status')
                         <td>
                             <select class="form-control"
                                 wire:change="$emit('updateUserStatus',{{ $user->id }},$event.target.value)">
@@ -38,14 +46,19 @@
                                 </option>
                             </select>
                         </td>
+                        @endcan
+                        @can('user-edit')
                         <td>
                             <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
                                 wire:click='setCurrentUser({{ $user }})'>ویرایش</a>
                         </td>
+                        @endcan
+                        @can('user-delete')
                         <td>
                             <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
                                 wire:click='setCurrentUser({{ $user }})'>حذف</button>
                         </td>
+                        @endcan
                     </tr>
                 @endforeach
             </tbody>

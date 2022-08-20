@@ -6,8 +6,8 @@
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
             </div>
-            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1" wire:model.lazy='filter_text'
-                    placeholder="جستجو" id="filter_text" name="filter_text">
+            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1"
+                wire:model.lazy='filter_text' placeholder="جستجو" id="filter_text" name="filter_text">
         </div>
     </div>
     <div class="card-body">
@@ -16,8 +16,12 @@
                 <tr>
                     <th scope="col">شناسه</th>
                     <th scope="col">عنوان</th>
-                    <th scope="col">ویرایش</th>
-                    <th scope="col">حذف</th>
+                    @can('permission-update')
+                        <th scope="col">ویرایش</th>
+                    @endcan
+                    @can('permission-delete')
+                        <th scope="col">حذف</th>
+                    @endcan
                 </tr>
             </thead>
             <tbody>
@@ -25,19 +29,23 @@
                     <tr>
                         <th scope="row">{{ $permission->id }}</th>
                         <td>{{ $permission->name }}</td>
-                        <td>
-                            <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
-                                wire:click="setCurrentPermission({{ $permission }})">ویرایش</a>
-                        </td>
-                        <td>
-                            <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
-                                wire:click="setCurrentPermission({{ $permission }})">حذف</a>
-                        </td>
+                        @can('permission-update')
+                            <td>
+                                <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
+                                    wire:click="setCurrentPermission({{ $permission }})">ویرایش</a>
+                            </td>
+                        @endcan
+                        @can('permission-delete')
+                            <td>
+                                <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
+                                    wire:click="setCurrentPermission({{ $permission }})">حذف</a>
+                            </td>
+                        @endcan
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        {{$permissions->links() }}
+        {{ $permissions->links() }}
     </div>
     {{-- create modal --}}
     <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
@@ -58,7 +66,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='store' data-dismiss="modal">ثبت</button>
+                    <button type="button" class="btn btn-outline-primary" wire:click='store'
+                        data-dismiss="modal">ثبت</button>
                 </div>
             </div>
         </div>

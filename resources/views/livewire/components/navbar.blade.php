@@ -6,28 +6,34 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            {{-- @can('') --}}
+            @can('user-list')
                 <li
                     class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.users.index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('livewire.users.index') }}">کاربران</a>
                 </li>
+            @endcan
+            @can('status-list')
                 <li
                     class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.status.index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('livewire.status.index') }}">وضعیت‌ها</a>
                 </li>
+            @endcan
+            @can('role-list')
                 <li
                     class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.roles.index' ? 'active' : '' }}">
                     <a class="nav-link" href="{{ route('livewire.roles.index') }}">نقش‌ها</a>
                 </li>
-                <li
-                    class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.permissions.index' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('livewire.permissions.index') }}">دسترسی‌ها</a>
-                </li>
-                <li
-                    class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.calenders.index' ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('livewire.calenders.index') }}">تقویم</a>
-                </li>
-            {{-- @endcan --}}
+            @endcan
+            @can('permission-list')
+            <li
+                class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.permissions.index' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('livewire.permissions.index') }}">دسترسی‌ها</a>
+            </li>
+            @endcan
+            <li
+                class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.calenders.index' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('livewire.calenders.index') }}">تقویم</a>
+            </li>
             <li
                 class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.tasks.index' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('livewire.tasks.index') }}">همه‌ی وظایف</a>
