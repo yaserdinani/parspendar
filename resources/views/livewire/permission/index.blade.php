@@ -59,15 +59,15 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name' required>
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='store'
-                        data-dismiss="modal">ثبت</button>
+                    <form wire:submit.prevent='store'>
+                        <input type="text" class="form-control mb-2" placeholder="عنوان" wire:model.lazy='name'
+                            required>
+                        @error('name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" wire:click='resetInputs'>لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -84,15 +84,15 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name' required>
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='update'
-                        data-dismiss="modal">ثبت</button>
+                    <form wire:submit.prevent='update'>
+                        <input type="text" class="form-control mb-2" placeholder="عنوان" wire:model.lazy='name'
+                            required>
+                        @error('name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" wire:click='resetInputs'>لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
                 </div>
             </div>
         </div>

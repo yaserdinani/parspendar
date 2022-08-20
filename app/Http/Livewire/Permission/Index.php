@@ -6,21 +6,15 @@ use Livewire\Component;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Validation\Rule;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination;
+    use WithPagination,LivewireAlert;
     protected $paginationTheme = 'bootstrap';
     public $name;
     public $current_permission;
-    // public $permissions;
     public $filter_text;
-
-    // protected $listeners = ['permissionAdded','permissionChanged','permissionRemoved'];
-
-    public function mount(){
-        // $this->permissions = Permission::all();
-    }
 
     public function store(){
         abort_unless(auth()->user()->can('permission-create'), '403', 'Unauthorized.');
@@ -29,24 +23,13 @@ class Index extends Component
         ]);
         Permission::create($validateData);
         $this->resetInputs();
-        $this->emit('permissionAdded');
+        $this->alert('success', 'دسترسی ایجاد شد');
     }
-
-    // public function permissionAdded(){
-    //     $this->permissions = Permission::all();
-    // }
-
-    // public function permissionChanged(){
-    //     $this->permissions = Permission::all();
-    // }
-
-    // public function permissionRemoved(){
-    //     $this->permissions = Permission::all();
-    // }
 
     public function resetInputs(){
         $this->name = null;
         $this->current_permission = null;
+        $this->resetValidation();
     }
 
     public function setCurrentPermission(Permission $permission){
@@ -60,15 +43,14 @@ class Index extends Component
             "name"=>["required",Rule::unique('permissions')->ignore($this->current_permission->id),"string","min:3","max:30"]
         ]);
         $this->current_permission->update($validateData);
-        $this->resetInputs();
-        // $this->emit('permissionChanged');
+        $this->alert('success', 'دسترسی ویرایش شد');
     }
 
     public function delete(){
         abort_unless(auth()->user()->can('permission-delete'), '403', 'Unauthorized.');
         $this->current_permission->delete();
         $this->resetInputs();
-        // $this->emit('permissionRemoved');
+        $this->alert('success', 'دسترسی به سطل زباله انتقال یافت');
     }
 
 
