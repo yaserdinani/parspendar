@@ -17,11 +17,13 @@ class Index extends Component
     public $update_mode = false;
     public $current_status;
     public $filter_text;
+    public $color;
 
     // protected $listeners = ["statusAdded","statusChanged","statusRemoved"];
 
     protected $rules = [
-        "name"=>["required","string","min:3","max:30"]
+        "name"=>["required","string","min:3","max:30"],
+        "color"=>["required"]
     ];
 
     public function mount(){

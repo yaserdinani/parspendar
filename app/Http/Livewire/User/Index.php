@@ -10,11 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Validation\Rule;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 
 class Index extends Component
 {
-    use WithPagination;
+    use WithPagination,LivewireAlert;
 
     public $current_user;
     public $statuses;
@@ -28,6 +29,7 @@ class Index extends Component
     public $all_roles;
     protected $listeners = ["updateUserStatus"];
     public $filter_text;
+    public $filter_type;
 
     public function mount(){
         $this->statuses = TaskStatus::all();
@@ -42,6 +44,7 @@ class Index extends Component
         $this->password_confirmation = null;
         $this->roles = [];
         $this->current_user = null;
+        $this->resetValidation();
     }
 
     public function setCurrentUser(User $user){
@@ -71,6 +74,7 @@ class Index extends Component
         ]);
         $user->assignRole($this->roles);
         $this->resetInputs();
+        $this->alert('success', 'کاربر جدید ایجاد شد');
     }
 
     public function update(){
@@ -109,13 +113,15 @@ class Index extends Component
         }
         DB::table('model_has_roles')->where('model_id',$this->current_user->id)->delete();
         $this->current_user->assignRole($this->roles);
-        $this->resetInputs();
+        // $this->resetInputs();
+        $this->alert('success', 'اطلاعات کاربر ویرایش شد');
     }
 
     public function delete(){
         abort_unless(auth()->user()->can('user-delete'), '403', 'Unauthorized.');
         $this->current_user->delete();
         $this->resetInputs();
+        $this->alert('success', 'کاربر به سطل زباله انتقال یافت');
     }
 
     public function updateUserStatus(User $user,$value){
@@ -123,16 +129,24 @@ class Index extends Component
         $user->update([
             "is_active" => ($value==0) ? false : true
         ]);
+        $this->alert('success', 'وضعیت کاربر تغییر کرد');
     }
 
     public function render()
     {
         abort_unless(auth()->user()->can('user-list'), '403', 'Unauthorized.');
-        $users = User::select("*")
+        if(isset($this->filter_type) && $this->filter_type!=2){
+            $users = User::select("*")
+            ->where("is_active","=",($this->filter_type==0) ? false : true)
+            ->paginate(2);
+        }
+        else{
+            $users = User::select("*")
             ->where("name","LIKE","%".$this->filter_text."%")
             ->orWhere("phone","LIKE","%".$this->filter_text."%")
             ->orWhere("email","LIKE","%".$this->filter_text."%")
             ->paginate(2);
+        }
         return view('livewire.user.index')
         ->with('users', $users);
     }

@@ -6,8 +6,13 @@
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
             </div>
-            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1" wire:model.lazy='filter_text'
-                    placeholder="جستجو" id="filter_text" name="filter_text">
+            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1"
+                wire:model.lazy='filter_text' placeholder="جستجو" id="filter_text" name="filter_text">
+            <select class="col-md-2 mx-1 form-control" wire:model.lazy='filter_type'>
+                <option value="2">همه</option>
+                <option value="1">فعال</option>
+                <option value="0">غیرفعال</option>
+            </select>
         </div>
     </div>
     <div class="card-body">
@@ -22,11 +27,10 @@
                         <th scope="col">وضعیت</th>
                     @endcan
                     @can('user-edit')
-                    <th scope="col">ویرایش</th>
+                        <th scope="col">ویرایش</th>
                     @endcan
                     @can('user-delete')
-                        
-                    <th scope="col">حذف</th>
+                        <th scope="col">حذف</th>
                     @endcan
                 </tr>
             </thead>
@@ -38,26 +42,26 @@
                         <td>{{ $user->phone }}</td>
                         <td>{{ $user->email }}</td>
                         @can('change-user-status')
-                        <td>
-                            <select class="form-control"
-                                wire:change="$emit('updateUserStatus',{{ $user->id }},$event.target.value)">
-                                <option value="1" {{ $user->is_active == true ? ' selected' : '' }}>فعال</option>
-                                <option value="0" {{ $user->is_active == false ? ' selected' : '' }}>غیرفعال
-                                </option>
-                            </select>
-                        </td>
+                            <td>
+                                <select class="form-control"
+                                    wire:change="$emit('updateUserStatus',{{ $user->id }},$event.target.value)">
+                                    <option value="1" {{ $user->is_active == true ? ' selected' : '' }}>فعال</option>
+                                    <option value="0" {{ $user->is_active == false ? ' selected' : '' }}>غیرفعال
+                                    </option>
+                                </select>
+                            </td>
                         @endcan
                         @can('user-edit')
-                        <td>
-                            <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
-                                wire:click='setCurrentUser({{ $user }})'>ویرایش</a>
-                        </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
+                                    wire:click='setCurrentUser({{ $user }})'>ویرایش</a>
+                            </td>
                         @endcan
                         @can('user-delete')
-                        <td>
-                            <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
-                                wire:click='setCurrentUser({{ $user }})'>حذف</button>
-                        </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
+                                    wire:click='setCurrentUser({{ $user }})'>حذف</button>
+                            </td>
                         @endcan
                     </tr>
                 @endforeach
@@ -79,71 +83,75 @@
                 <div class="modal-body">
                     <div class="card">
                         <div class="card-body">
-                            <div class="form-row">
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="phone">موبایل</label>
-                                    <input type="tel" class="form-control text-right" wire:model.lazy='phone'
-                                        id="phone" placeholder="موبایل" required autocomplete="off">
-                                    @error('phone')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                            <form wire:submit.prevent='store'>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="phone">موبایل</label>
+                                        <input type="tel" class="form-control text-right" wire:model.lazy='phone'
+                                            id="phone" placeholder="موبایل" required autocomplete="off"
+                                            pattern="^(\+98|0)?9\d{9}$">
+                                        @error('phone')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="name">نام و نام خانوادگی</label>
+                                        <input type="text" class="form-control text-right" wire:model.lazy='name'
+                                            id="name" placeholder="نام و نام خانوادگی" required autocomplete="off">
+                                        @error('name')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="name">نام و نام خانوادگی</label>
-                                    <input type="text" class="form-control text-right" wire:model.lazy='name'
-                                        id="name" placeholder="نام و نام خانوادگی" required autocomplete="off">
-                                    @error('name')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="role">نقش</label>
+                                        <select id="role" class="form-control text-right" wire:model.lazy='roles'
+                                            multiple required>
+                                            @foreach ($all_roles as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('roles')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="email">ایمیل</label>
+                                        <input type="email" class="form-control text-right" wire:model.lazy='email'
+                                            id="email" placeholder="ایمیل" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,}"
+                                            required autocomplete="off">
+                                        @error('email')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="role">نقش</label>
-                                    <select id="role" class="form-control text-right" wire:model.lazy='roles'
-                                        multiple>
-                                        @foreach ($all_roles as $role)
-                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('roles')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="password_confirmation">تکرار رمز عبور</label>
+                                        <input type="password" class="form-control text-right"
+                                            wire:model.lazy='password_confirmation' id="password_confirmation"
+                                            placeholder="تکرار رمز عبور" required autocomplete="off">
+                                        @error('password_confirmation')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="password">رمز عبور</label>
+                                        <input type="password" class="form-control text-right"
+                                            wire:model.lazy='password' id="password" placeholder="رمز عبور" required
+                                            autocomplete="off">
+                                        @error('password')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="email">ایمیل</label>
-                                    <input type="email" class="form-control text-right" wire:model.lazy='email'
-                                        id="email" placeholder="ایمیل" required autocomplete="off">
-                                    @error('email')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="password_confirmation">تکرار رمز عبور</label>
-                                    <input type="password" class="form-control text-right"
-                                        wire:model.lazy='password_confirmation' id="password_confirmation"
-                                        placeholder="تکرار رمز عبور" required autocomplete="off">
-                                    @error('password_confirmation')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="password">رمز عبور</label>
-                                    <input type="password" class="form-control text-right" wire:model.lazy='password'
-                                        id="password" placeholder="رمز عبور" required autocomplete="off">
-                                    @error('password')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                                    wire:click="resetInputs">لغو</button>
+                                <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                            </form>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='store'>ثبت</button>
                 </div>
             </div>
         </div>
@@ -162,71 +170,76 @@
                 <div class="modal-body">
                     <div class="card">
                         <div class="card-body">
-                            <div class="form-row">
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="phone">موبایل</label>
-                                    <input type="tel" class="form-control text-right" wire:model.lazy='phone'
-                                        id="phone" placeholder="موبایل" required autocomplete="off">
-                                    @error('phone')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                            <form wire:submit.prevent='update'>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="phone">موبایل</label>
+                                        <input type="tel" class="form-control text-right"
+                                            wire:model.lazy='phone' id="phone" placeholder="موبایل" required
+                                            autocomplete="off" pattern="^(\+98|0)?9\d{9}$">
+                                        @error('phone')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="name">نام و نام خانوادگی</label>
+                                        <input type="text" class="form-control text-right"
+                                            wire:model.lazy='name' id="name" placeholder="نام و نام خانوادگی"
+                                            required autocomplete="off">
+                                        @error('name')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="name">نام و نام خانوادگی</label>
-                                    <input type="text" class="form-control text-right" wire:model.lazy='name'
-                                        id="name" placeholder="نام و نام خانوادگی" required autocomplete="off">
-                                    @error('name')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="role">نقش</label>
+                                        <select id="role" class="form-control text-right"
+                                            wire:model.lazy='roles' multiple required>
+                                            @foreach ($all_roles as $role)
+                                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('roles')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="email">ایمیل</label>
+                                        <input type="email" class="form-control text-right"
+                                            wire:model.lazy='email' id="email" placeholder="ایمیل" required
+                                            autocomplete="off" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,}">
+                                        @error('email')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="role">نقش</label>
-                                    <select id="role" class="form-control text-right" wire:model.lazy='roles'
-                                        multiple>
-                                        @foreach ($all_roles as $role)
-                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('roles')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="password_confirmation">تکرار رمز عبور</label>
+                                        <input type="password" class="form-control text-right"
+                                            wire:model.lazy='password_confirmation' id="password_confirmation"
+                                            placeholder="تکرار رمز عبور" autocomplete="off">
+                                        @error('password_confirmation')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6 text-right">
+                                        <label for="password">رمز عبور</label>
+                                        <input type="password" class="form-control text-right"
+                                            wire:model.lazy='password' id="password" placeholder="رمز عبور"
+                                            autocomplete="off">
+                                        @error('password')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="email">ایمیل</label>
-                                    <input type="email" class="form-control text-right" wire:model.lazy='email'
-                                        id="email" placeholder="ایمیل" required autocomplete="off">
-                                    @error('email')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="password_confirmation">تکرار رمز عبور</label>
-                                    <input type="password" class="form-control text-right"
-                                        wire:model.lazy='password_confirmation' id="password_confirmation"
-                                        placeholder="تکرار رمز عبور" required autocomplete="off">
-                                    @error('password_confirmation')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-6 text-right">
-                                    <label for="password">رمز عبور</label>
-                                    <input type="password" class="form-control text-right" wire:model.lazy='password'
-                                        id="password" placeholder="رمز عبور" autocomplete="off">
-                                    @error('password')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                                    wire:click='resetInputs'>لغو</button>
+                                <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                            </form>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='update'>ثبت</button>
                 </div>
             </div>
         </div>

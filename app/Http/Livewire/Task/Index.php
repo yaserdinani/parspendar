@@ -53,6 +53,7 @@ class Index extends Component
     }
 
     public function updateTaskStatus(Task $task,$value){
+        abort_unless(auth()->user()->can('change-task-status'), '403', 'Unauthorized.');
         $task->update([
             "task_status_id" => $value
         ]);
