@@ -22,6 +22,8 @@ class AppointmentsCalendar extends LivewireCalendar
                     'title' => $model->name,
                     'description' => $model->description,
                     'date' => $model->started_at,
+                    'color' => $model->taskStatus->color,
+                    'finished_at' =>$model->finished_at,
                 ];
             });
 

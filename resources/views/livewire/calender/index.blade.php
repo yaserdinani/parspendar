@@ -15,7 +15,7 @@
                     </select>
                 </div>
                 <div class="tasks-header-right">
-                    <i class="fa fa-bars fa-1x" aria-hidden="true"></i>
+                    <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
                 </div>
             </div>
             <div class="tasks-items-container">
@@ -23,12 +23,12 @@
                     <div class="tasks-items-content mx-2" style="cursor: pointer;" wire:click="$emit('setTask',{{$value}})">
                         <div class="tasks-item-top p-2">
                             <div class="tasks-item-top-left">
-                                <span class="square today-square"></span>
-                                <span class="label-high px-1 rounded">{{ $value->taskStatus->name }}</span>
+                                <span class="square" style="background-color:{{$value->taskStatus->color}};"></span>
+                                <span class="px-1 rounded text-white" style="background-color:{{$value->taskStatus->color}};">{{ $value->taskStatus->name }}</span>
                                 <span>{{ $value->name }}</span>
                             </div>
                             <div class="tasks-item-top-right">
-                                <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+                                <i class="fa fa-eye fa-2x" aria-hidden="true"></i>
                             </div>
                         </div>
                         <div class="tasks-item-bottom p-2">
@@ -49,7 +49,7 @@
                 <span>
                     <b>{{ $today }}</b>
                 </span>
-                <i class="fa fa-bars fa-1x" aria-hidden="true"></i>
+                <i class="fa fa-eye fa-1x" aria-hidden="true"></i>
             </div>
             <div class="events-items-container p-2">
                 @if ($task_flag)
