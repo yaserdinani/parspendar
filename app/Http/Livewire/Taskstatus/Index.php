@@ -16,6 +16,7 @@ class Index extends Component
     public $status_id;
     public $update_mode = false;
     public $current_status;
+    public $filter_text;
 
     // protected $listeners = ["statusAdded","statusChanged","statusRemoved"];
 
@@ -87,7 +88,9 @@ class Index extends Component
     public function render()
     {
         abort_unless(auth()->user()->can('status-list'), '403', 'Unauthorized.');
-        $statuses = TaskStatus::paginate(2);
+        $statuses = TaskStatus::select("*")
+        ->where('name',"LIKE","%".$this->filter_text."%")
+        ->paginate(2);
         return view('livewire.taskstatus.index',["statuses"=>$statuses]);
     }
 }
