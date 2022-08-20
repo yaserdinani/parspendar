@@ -23,7 +23,12 @@ class AuthController extends Controller
         }
 
         else{
-            return redirect()->route('livewire.tasks.index');
+            if(auth()->user()->is_active){
+                return redirect()->route('livewire.tasks.index');
+            }
+            else{
+                return back()->with("message","حساب کاربری شما مسدود شده است");
+            }
         }
     }
 

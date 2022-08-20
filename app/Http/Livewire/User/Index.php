@@ -26,6 +26,7 @@ class Index extends Component
     public $password_confirmation;
     public $roles = [];
     public $all_roles;
+    protected $listeners = ["updateUserStatus"];
 
     public function mount(){
         $this->statuses = TaskStatus::all();
@@ -114,6 +115,12 @@ class Index extends Component
         abort_unless(auth()->user()->can('user-delete'), '403', 'Unauthorized.');
         $this->current_user->delete();
         $this->resetInputs();
+    }
+
+    public function updateUserStatus(User $user,$value){
+        $user->update([
+            "is_active" => ($value==0) ? false : true
+        ]);
     }
 
     public function render()

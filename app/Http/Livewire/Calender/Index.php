@@ -22,7 +22,12 @@ class Index extends Component
         $this->task = $task;
         $datework = Carbon::createFromDate($task->finished_at);
         $now = Carbon::now();
-        $this->remaining_time = $datework->diffInDays($now);
+        if($datework>$now){
+            $this->remaining_time = $datework->diffInDays($now);
+        }
+        else{
+            $this->remaining_time = "پایان رسیده";
+        }
         $this->task_flag = true;
     }
 
