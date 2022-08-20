@@ -17,6 +17,7 @@ class Index extends Component
     public $remaining_time;
     public $filter_type;
     public $statuses;
+    public $filter_text;
 
     public function setTask(Task $task){
         $this->task = $task;
@@ -44,28 +45,33 @@ class Index extends Component
         $this->task = null;
     }
 
-    public function filterTasks($filter_type=0){
-        $this->filter_type = $filter_type;
+    public function render()
+    {
         if($this->filter_type!=0){
             if(auth()->user()->can('see-all-tasks')){
-                $this->all_tasks = Task::where("task_status_id",$filter_type)->get();
+                $this->all_tasks = Task::where("task_status_id",$this->filter_type)
+                ->where("name","LIKE","%".$this->filter_text."%")
+                ->where("description","LIKE","%".$this->filter_text."%")
+                ->get();
             }
             else{
-                $this->all_tasks = auth()->user()->tasks();
-            }
+                $this->all_tasks = auth()->user()->tasks()->where("name","LIKE","%".$this->filter_text."%")
+                ->orWhere("description","LIKE","%".$this->filter_text."%")
+                ->get();;
+            } 
         }
         else{
             if(auth()->user()->can('see-all-tasks')){
-                $this->all_tasks = Task::all();
+                $this->all_tasks = Task::orWhere("name","LIKE","%".$this->filter_text."%")
+                ->orWhere("description","LIKE","%".$this->filter_text."%")
+                ->get();
             }
             else{
-                $this->all_tasks = auth()->user()->tasks();
+                $this->all_tasks = auth()->user()->tasks()->orWhere("name","LIKE","%".$this->filter_text."%")
+                ->orWhere("description","LIKE","%".$this->filter_text."%")
+                ->get();;
             }
         }
-    }
-
-    public function render()
-    {
         return view('livewire.calender.index');
     }
 }

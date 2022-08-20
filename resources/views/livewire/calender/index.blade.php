@@ -6,13 +6,14 @@
     <div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
         <div class="tasks-container">
             <div class="tasks-container-header px-2">
-                <div class="tasks-header-left">
-                    <select class="form-control" wire:model.lazy='filter_type' wire:change='filterTasks($event.target.value)'>
+                <div class="tasks-header-left form-row">
+                    <select class="form-control col-md-6" wire:model.lazy='filter_type'>
                         <option selected value="0">همه وظایف</option>
                         @foreach($statuses as $status)
                             <option value="{{$status->id}}">{{$status->name}}</option>
                         @endforeach
                     </select>
+                    <input type="text" class="form-control col-md-6 text-right" wire:model.lazy='filter_text' placeholder="جستجو">
                 </div>
                 <div class="tasks-header-right">
                     <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
