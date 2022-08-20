@@ -14,6 +14,7 @@ class Index extends Component
     public $name;
     public $current_permission;
     // public $permissions;
+    public $filter_text;
 
     // protected $listeners = ['permissionAdded','permissionChanged','permissionRemoved'];
 
@@ -74,7 +75,9 @@ class Index extends Component
     public function render()
     {
         abort_unless(auth()->user()->can('permission-list'), '403', 'Unauthorized.');
-        $permissions = Permission::paginate(2);
+        $permissions = Permission::select("*")
+        ->where("name","LIKE","%".$this->filter_text."%")
+        ->paginate(5);
         return view('livewire.permission.index',["permissions"=>$permissions]);
     }
 }

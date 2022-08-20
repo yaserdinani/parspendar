@@ -2,10 +2,12 @@
 <div class="card">
     <div class="card-header">
         <h3>همه‌ی دسترسی‌ها</h3>
-        <div class="d-flex flex-row-reverse justify-content-between">
+        <div class="d-flex flex-row-reverse">
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
             </div>
+            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1" wire:model.lazy='filter_text'
+                    placeholder="جستجو" id="filter_text" name="filter_text">
         </div>
     </div>
     <div class="card-body">
