@@ -6,8 +6,8 @@
             <div>
                 <a data-toggle="modal" data-target="#createModal" class="btn btn-success">افزودن</a>
             </div>
-            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1" wire:model.lazy='filter_text'
-                    placeholder="جستجو" id="filter_text" name="filter_text">
+            <input autocomplete="off" type="text" class="col-md-2 form-control text-right mx-1"
+                wire:model.lazy='filter_text' placeholder="جستجو" id="filter_text" name="filter_text">
         </div>
     </div>
     <div class="card-body">
@@ -16,11 +16,12 @@
                 <tr>
                     <th scope="col">شناسه</th>
                     <th scope="col">عنوان</th>
+                    <th scope="col">رنگ</th>
                     @can('status-edit')
-                    <th scope="col">ویرایش</th>
+                        <th scope="col">ویرایش</th>
                     @endcan
                     @can('status-delete')
-                    <th scope="col">حذف</th>
+                        <th scope="col">حذف</th>
                     @endcan
                 </tr>
             </thead>
@@ -29,17 +30,20 @@
                     <tr>
                         <th scope="row">{{ $status->id }}</th>
                         <td>{{ $status->name }}</td>
-                        @can('status-edit')
                         <td>
-                            <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
-                                wire:click="edit({{ $status }})">ویرایش</a>
+                            <input type="color" value="{{$status->color}}" wire:change="$emit('changeStatusColor',{{$status}},$event.target.value)">
                         </td>
+                        @can('status-edit')
+                            <td>
+                                <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
+                                    wire:click="edit({{ $status }})">ویرایش</a>
+                            </td>
                         @endcan
                         @can('status-delete')
-                        <td>
-                            <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
-                                wire:click="setStatus({{ $status }})">حذف</a>
-                        </td>
+                            <td>
+                                <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
+                                    wire:click="setStatus({{ $status }})">حذف</a>
+                            </td>
                         @endcan
                     </tr>
                 @endforeach
@@ -59,14 +63,29 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name' required>
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='store' data-dismiss="modal">ثبت</button>
+                    <form wire:submit.prevent='store'>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 text-right">
+                                <label for="name">عنوان</label>
+                                <input type="text" class="form-control text-right" wire:model.lazy='name'
+                                    id="name" placeholder="عنوان" required autocomplete="off">
+                                @error('name')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label for="color">رنگ</label>
+                                <input type="color" class="form-control text-right" wire:model.lazy='color'
+                                    id="color" required placeholder="رنگ" autocomplete="off">
+                                @error('color')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                            wire:click="resetInputs">لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -83,14 +102,29 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name' required>
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='update' data-dismiss="modal">ثبت</button>
+                    <form wire:submit.prevent='update'>
+                        <div class="form-row">
+                            <div class="form-group col-md-6 text-right">
+                                <label for="name">عنوان</label>
+                                <input type="text" class="form-control text-right" wire:model.lazy='name'
+                                    id="name" placeholder="عنوان" required autocomplete="off">
+                                @error('name')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group col-md-6 text-right">
+                                <label for="color">رنگ</label>
+                                <input type="color" class="form-control text-right" wire:model.lazy='color'
+                                    id="color" required placeholder="رنگ" autocomplete="off">
+                                @error('color')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                            wire:click="resetInputs">لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
                 </div>
             </div>
         </div>
