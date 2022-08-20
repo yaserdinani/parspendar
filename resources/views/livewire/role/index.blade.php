@@ -59,20 +59,22 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name' required>
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                    <select id="role" class="form-control text-right" wire:model.lazy='permissions' multiple>
-                        @foreach ($all_permissions as $permission)
-                            <option value="{{ $permission->id }}">{{ $permission->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='store'
-                        data-dismiss="modal">ثبت</button>
+                    <form wire:submit.prevent='store'>
+                        <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name'
+                            required>
+                        @error('name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <select id="role" class="form-control text-right my-2" wire:model.lazy='permissions' multiple
+                            required>
+                            @foreach ($all_permissions as $permission)
+                                <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                            wire:click='resetInputs'>لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -89,20 +91,22 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name' required>
-                    @error('name')
-                        <div class="alert alert-danger">{{ $message }}</div>
-                    @enderror
-                    <select id="role" class="form-control text-right" wire:model.lazy='permissions' multiple>
-                        @foreach ($all_permissions as $permission)
-                            <option value="{{ $permission->id }}">{{ $permission->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
-                    <button type="button" class="btn btn-outline-primary" wire:click='update'
-                        data-dismiss="modal">ثبت</button>
+                    <form wire:submit.prevent='update'>
+                        <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name'
+                            required>
+                        @error('name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <select id="role" class="form-control text-right my-2" wire:model.lazy='permissions' multiple
+                            required>
+                            @foreach ($all_permissions as $permission)
+                                <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                            wire:click='resetInputs'>لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
                 </div>
             </div>
         </div>

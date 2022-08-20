@@ -8,40 +8,27 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Index extends Component
 {
-    use WithPagination;
+    use WithPagination,LivewireAlert;
     protected $paginationTheme = 'bootstrap';
     public $name;
     public $permissions = [];
     public $current_role;
-    // public $roles;
-    // protected $listeners = ['roleAdded','roleChanged','roleRemoved'];
     public $all_permissions;
     public $filter_text;
 
     public function mount(){
-        // $this->roles = Role::all();
         $this->all_permissions = Permission::all();
     }
-
-    // public function roleAdded(){
-    //     $this->roles = Role::all();
-    // }
-
-    // public function roleChanged(){
-    //     $this->roles = Role::all();
-    // }
-
-    // public function roleRemoved(){
-    //     $this->roles = Role::all();
-    // }
 
     public function resetInputs(){
         $this->name = null;
         $this->current_role = null;
         $this->permissions = [];
+        $this->resetValidation();
     }
 
     public function setCurrentRole(Role $role){
@@ -63,7 +50,7 @@ class Index extends Component
         ]);
         $role->syncPermissions($this->permissions);
         $this->resetInputs();
-        // $this->emit('roleAdded');
+        $this->alert('success', 'نقش جدید ایجاد شد');
     }
 
     public function update(){
@@ -78,15 +65,14 @@ class Index extends Component
         ]);
         
         $this->current_role->syncPermissions($this->permissions);
-        $this->resetInputs();
-        // $this->emit('roleChanged');
+        $this->alert('success', 'نقش ویرایش شد');
     }
 
     public function delete(){
         abort_unless(auth()->user()->can('role-delete'), '403', 'Unauthorized.');
         $this->current_role->delete();
         $this->resetInputs();
-        // $this->emit('roleRemoved');
+        $this->alert('success', 'نقش به سطل زباله انتقال یافت');
     }
 
     public function render()
@@ -94,7 +80,7 @@ class Index extends Component
         abort_unless(auth()->user()->can('role-list'), '403', 'Unauthorized.');
         $roles = Role::select("*")
         ->where('name',"LIKE","%".$this->filter_text."%")
-        ->paginate(2);
+        ->paginate(5);
         return view('livewire.role.index',["roles"=>$roles]);
     }
 }
