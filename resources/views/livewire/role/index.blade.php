@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="card-body">
-        <table class="table table-bordered" dir="rtl">
+        <table class="table table-bordered text-center" dir="rtl">
             <thead>
                 <tr>
                     <th scope="col">شناسه</th>
@@ -28,7 +28,7 @@
                 @foreach ($roles as $role)
                     <tr>
                         <th scope="row">{{ $role->id }}</th>
-                        <td>{{ $role->name }}</td>
+                        <td class="text-right">{{ $role->name }}</td>
                         @can('role-edit')
                             <td>
                                 <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"

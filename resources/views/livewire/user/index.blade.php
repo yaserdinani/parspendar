@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="card-body">
-        <table class="table table-bordered" dir="rtl">
+        <table class="table table-bordered text-center" dir="rtl">
             <thead>
                 <tr>
                     <th scope="col">شناسه</th>
@@ -38,9 +38,9 @@
                 @foreach ($users as $user)
                     <tr>
                         <th scope="row">{{ $user->id }}</th>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->phone }}</td>
-                        <td>{{ $user->email }}</td>
+                        <td class="text-right">{{ $user->name }}</td>
+                        <td class="text-right">{{ $user->phone }}</td>
+                        <td class="text-right">{{ $user->email }}</td>
                         @can('change-user-status')
                             <td>
                                 <select class="form-control"

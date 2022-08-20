@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="card-body">
-        <table class="table table-bordered" dir="rtl">
+        <table class="table table-bordered text-center" dir="rtl">
             <thead>
                 <tr>
                     <th scope="col">شناسه</th>
@@ -29,7 +29,7 @@
                 @foreach ($statuses as $status)
                     <tr>
                         <th scope="row">{{ $status->id }}</th>
-                        <td>{{ $status->name }}</td>
+                        <td class="text-right">{{ $status->name }}</td>
                         <td>
                             <input type="color" value="{{$status->color}}" wire:change="$emit('changeStatusColor',{{$status}},$event.target.value)">
                         </td>
