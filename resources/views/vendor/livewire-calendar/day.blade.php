@@ -13,9 +13,9 @@
         id="{{ $componentId }}-{{ $day }}">
 
         <div
-            @if($dayClickEnabled)
+            {{-- @if($dayClickEnabled)
                 wire:click="onDayClick({{ $day->year }}, {{ $day->month }}, {{ $day->day }})"
-            @endif
+            @endif --}}
             class="w-full h-full p-2 {{ $dayInMonth ? $isToday ? 'bg-yellow-100' : ' bg-white ' : 'bg-gray-100' }} flex flex-col">
 
             {{-- Number of Day --}}
