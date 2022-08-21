@@ -12,6 +12,10 @@ class Navbar extends Component
         return redirect()->route('auth.index');
     }
 
+    public function showNotifications(){
+        return redirect()->route('livewire.notifications.index');
+    }
+
     public function render()
     {
         return view('livewire.components.navbar');

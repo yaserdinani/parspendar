@@ -38,6 +38,9 @@
                 class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.tasks.index' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('livewire.tasks.index') }}">همه‌ی وظایف</a>
             </li>
+            <li style="display: flex;" class="ml-3" wire:click='showNotifications'>
+                <livewire:notification />
+            </li>
         </ul>
         <a class="btn btn-outline-danger" wire:click="logout">خروج</a>
     </div>

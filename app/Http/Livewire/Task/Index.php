@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use App\Events\TaskCreate;
 
 class Index extends Component
 {
@@ -108,8 +109,8 @@ class Index extends Component
             "started_at"=>$this->started_at,
             "finished_at"=>$this->finished_at,
         ]);
-
         $task->users()->sync($this->users);
+        event(new TaskCreate($task));
         $this->resetInputs();
         $this->alert('success', 'وظیفه ایجاد شد');
     }

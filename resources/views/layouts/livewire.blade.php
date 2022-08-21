@@ -381,6 +381,12 @@
     @stack('scripts')
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <x-livewire-alert::scripts />
+    <script type="text/javascript">
+        Echo.channel('events')
+            .listen('TaskCreate', (e) =>
+            Livewire.emitTo('notification','refreshNotification')
+            );
+    </script>
 </body>
 
 </html>
