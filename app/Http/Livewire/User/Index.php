@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Validation\Rule;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 
 class Index extends Component
@@ -73,6 +75,7 @@ class Index extends Component
             "password"=>Hash::make($this->password)
         ]);
         $user->assignRole($this->roles);
+        Mail::to($user)->send(new WelcomeMail($user,$this->password));
         $this->resetInputs();
         $this->alert('success', 'کاربر جدید ایجاد شد');
     }
