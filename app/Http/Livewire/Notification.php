@@ -12,11 +12,11 @@ class Notification extends Component
     protected $listeners=["refreshNotification"];
 
     public function mount(){
-        $this->notification_count = auth()->user()->notifications()->count();
+        $this->notification_count = auth()->user()->notifications()->where('is_seen',false)->count();
     }
 
     public function refreshNotification(){
-        $this->notification_count = auth()->user()->notifications()->count();
+        $this->notification_count = auth()->user()->notifications()->where('is_seen',false)->count();
     }
 
     public function render()

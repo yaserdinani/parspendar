@@ -28,6 +28,7 @@
                 <tr>
                     <th scope="col">شناسه</th>
                     <th scope="col">توضیح</th>
+                    <th scope="col">خوانده شده</th>
                     <th scope="col">حذف</th>
                 </tr>
             </thead>
@@ -36,10 +37,13 @@
                     <tr>
                         <th scope="row">{{ $notification->id }}</th>
                         <td class="text-right">{{ $notification->description }}</td>
-                            <td>
-                                <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
-                                    wire:click="setNotification({{ $notification }})">حذف</a>
-                            </td>
+                        <td>
+                            <input class="form-check-input" type="checkbox" {{($notification->is_seen) ? 'checked' : ''}} wire:change="$emit('seenNotification',{{ $notification}},$event.target.value)">
+                        </td>
+                        <td>
+                            <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
+                                wire:click="setNotification({{ $notification }})">حذف</a>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -61,7 +65,8 @@
                     آیا از حذف این نوتیفیکیشن اطمینان دارید؟
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" wire:click="resetInputs">لغو</button>
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+                        wire:click="resetInputs">لغو</button>
                     <button type="button" class="btn btn-outline-primary" wire:click='delete'
                         data-dismiss="modal">حذف</button>
                 </div>

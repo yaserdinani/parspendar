@@ -14,6 +14,7 @@ class Index extends Component
     public $filter_text;
     public $current_notification;
 
+    protected $listeners = ["seenNotification"];
 
     public function setNotification(Notification $notification){
         $this->current_notification = $notification;
@@ -27,6 +28,14 @@ class Index extends Component
 
     public function resetInputs(){
         $this->current_notification = null;
+    }
+
+    public function seenNotification(Notification $notification,$value){
+        $notification->update([
+            "is_seen"=> ($value) ? true : false,
+        ]);
+        $this->alert('success', 'وضعیت نوتیفیکیشن به خوانده شده تغییر یافت');
+        $this->emitTo('notification','refreshNotification');
     }
 
     public function render()
