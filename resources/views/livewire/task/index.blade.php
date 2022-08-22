@@ -47,6 +47,7 @@
                     <th scope="col">وضعیت</th>
                     <th scope="col">تاریخ شروع</th>
                     <th scope="col">تاریخ پایان</th>
+                    <th scope="col">نظرات</th>
                     @can('task-edit')
                         <th scope="col">ویرایش</th>
                     @endcan
@@ -77,15 +78,18 @@
                         <td class="text-right">
                             {{ \Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y') }}
                         </td>
+                        <td>
+                            <a href="{{route('livewire.comments.index',$task)}}" class="btn btn-sm btn-info">مشاهده</a>
+                        </td>
                         @can('task-edit')
                             <td>
-                                <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-outline-warning"
+                                <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-warning"
                                     wire:click="setCurrentTask({{ $task }})">ویرایش</a>
                             </td>
                         @endcan
                         @can('task-delete')
                             <td>
-                                <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-outline-danger"
+                                <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-danger"
                                     wire:click="setCurrentTask({{ $task }})">حذف</a>
                             </td>
                         @endcan
