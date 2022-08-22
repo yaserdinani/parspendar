@@ -4,9 +4,12 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\User;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 
 class Notification extends Component
 {
+    use LivewireAlert;
+
     public $notification_count;
 
     protected $listeners=["refreshNotification"];

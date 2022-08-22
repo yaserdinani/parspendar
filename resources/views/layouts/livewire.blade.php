@@ -384,7 +384,11 @@
     <script type="text/javascript">
         Echo.channel('events')
             .listen('TaskCreate', (e) =>
-            Livewire.emitTo('notification','refreshNotification')
+                Livewire.emitTo('notification', 'refreshNotification')
+            );
+        Echo.channel('events')
+            .listen('MentionComment', (e) =>
+                Livewire.emitTo('notification', 'refreshNotification')
             );
     </script>
 </body>
