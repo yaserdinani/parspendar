@@ -31,4 +31,8 @@ class Comment extends Model
     public function childrens(){
         return $this->hasMany(Comment::class,'comment_id');
     }
+
+    public function mentionUsers(){
+        return $this->belongsToMany(User::class,'comment_user');
+    }
 }
