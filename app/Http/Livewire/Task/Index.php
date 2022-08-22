@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Events\TaskCreate;
+use Illuminate\Support\Facades\DB;
 
 class Index extends Component
 {
@@ -37,8 +38,9 @@ class Index extends Component
     public $filter_finished_at;
     public $filter_started_time;
     public $filter_finished_time;
+    public $spent_time;
 
-    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt"];
+    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt","setSpentTime"];
 
     public function resetInputs(){
         $this->current_task = null;
@@ -199,6 +201,7 @@ class Index extends Component
                 ->paginate(5);
             }
         }
+        $this->spent_time++;
         return view('livewire.task.index',["tasks"=>$tasks]);
     }
 
@@ -220,5 +223,20 @@ class Index extends Component
     public function setFilterStartedAt($value){
         $this->filter_started_at = $value;
         $this->filter_started_time = \Morilog\Jalali\Jalalian::forge($this->filter_started_at)->format('%A %d %B %Y');
+    }
+
+    public function setSpentTime(Task $task,$value){
+        $time_spent = DB::table('task_user')->where([
+            ["user_id",auth()->user()->id],
+            ["task_id",$task->id]
+        ])->first()->time_spent;
+        // dd($last);
+        DB::table('task_user')->where([
+            ["user_id",auth()->user()->id],
+            ["task_id",$task->id]
+        ])->update([
+            "time_spent"=>$time_spent + $value
+        ]);
+        $this->alert('success', 'زمان شما ثبت شد');
     }
 }

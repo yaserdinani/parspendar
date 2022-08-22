@@ -1,7 +1,8 @@
 @section('title', 'همه‌ی وظایف')
 <div class="card">
     <div wire:loading>
-        <div style="background-color:#000;display:flex;justify-content:center;align-items:center;position:fixed;top:0px;left:0px;width:100%;height:100%;opacity:0.4;z-index:9999;">
+        <div
+            style="background-color:#000;display:flex;justify-content:center;align-items:center;position:fixed;top:0px;left:0px;width:100%;height:100%;opacity:0.4;z-index:9999;">
             <div class="la-ball-spin-clockwise">
                 <div></div>
                 <div></div>
@@ -47,6 +48,8 @@
                     <th scope="col">وضعیت</th>
                     <th scope="col">تاریخ شروع</th>
                     <th scope="col">تاریخ پایان</th>
+                    <th scope="col">زمان صرف شده</th>
+                    <th scope="col">تایمر</th>
                     <th scope="col">نظرات</th>
                     @can('task-edit')
                         <th scope="col">ویرایش</th>
@@ -79,7 +82,24 @@
                             {{ \Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y') }}
                         </td>
                         <td>
-                            <a href="{{route('livewire.comments.index',$task)}}" class="btn btn-sm btn-info">مشاهده</a>
+                            {{ Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first()->time_spent ?? 0 }} ثانیه
+                        </td>
+                        <td>
+                            @if(Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first())
+                            <i class="fa fa-pause-circle" style="cursor: pointer;"
+                                onclick="pause({{ $task->id }})"></i>
+                            <span id="time.task.{{ $task->id }}">
+                                0
+                            </span>
+                            <i class="fa fa-play-circle" style="cursor: pointer;"
+                                onclick="play({{ $task->id }})"></i>
+                            @else
+                            <span>مجری نیستید</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('livewire.comments.index', $task) }}"
+                                class="btn btn-sm btn-info">مشاهده</a>
                         </td>
                         @can('task-edit')
                             <td>
@@ -290,6 +310,23 @@
 </div>
 @push('scripts')
     <script type="text/javascript" defer>
+        var intervals = []
+
+        function play(id) {
+            var span = document.getElementById("time.task." + id);
+            var counter = 1;
+            intervals[id] = setInterval(function() {
+                span.innerHTML = counter
+                counter++
+            }, 1000)
+        }
+
+        function pause(id) {
+            var span = document.getElementById("time.task." + id);
+            Livewire.emit('setSpentTime',id,span.innerHTML)
+            clearInterval(intervals[id])
+            span.innerHTML = 0
+        }
         $(document).ready(function() {
             $(".started_at").click(function() {
                     $(".started_at").persianDatepicker({
@@ -355,6 +392,8 @@
                         Livewire.emit('setFilterStartedAt', new persianDate(unix).unix())
                     },
                 });
+            $("")
+
         });
     </script>
 @endpush
