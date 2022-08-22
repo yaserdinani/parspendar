@@ -39,8 +39,9 @@ class Index extends Component
     public $filter_started_time;
     public $filter_finished_time;
     public $spent_time;
+    public $task_status_updated_flag;
 
-    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt","setSpentTime"];
+    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt","setSpentTime","taskStatusUpdated"];
 
     public function resetInputs(){
         $this->current_task = null;
@@ -53,6 +54,9 @@ class Index extends Component
         $this->start_time = null;
         $this->finish_time = null;
         $this->resetValidation();
+    }
+    public function taskStatusUpdated(){
+        $this->task_status_updated_flag = true;
     }
 
     public function updateTaskStatus(Task $task,$value){

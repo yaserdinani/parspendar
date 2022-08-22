@@ -19,6 +19,7 @@
         "pusher-js": "^7.4.0"
     },
     "dependencies": {
-        "persian-datepicker": "^1.2.0"
+        "persian-datepicker": "^1.2.0",
+        "sortablejs": "^1.15.0"
     }
 }

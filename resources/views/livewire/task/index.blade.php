@@ -15,6 +15,10 @@
             </div>
         </div>
     </div>
+    <livewire:task-status-boarder
+    :sortable="true"
+    :sortable-between-statuses="true"
+    />
     <div class="card-header">
         <h3>همه‌ی وظایف</h3>
         <div class="d-flex flex-row-reverse">
