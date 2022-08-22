@@ -74,7 +74,7 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent='store'>
-                        <input type="text" class="form-control mb-2" placeholder="عنوان" wire:model.lazy='name'
+                        <input type="text" class="form-control mb-2" placeholder="عنوان" wire:model.defer='name'
                             required>
                         @error('name')
                             <div class="alert alert-danger">{{ $message }}</div>
@@ -99,7 +99,7 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent='update'>
-                        <input type="text" class="form-control mb-2" placeholder="عنوان" wire:model.lazy='name'
+                        <input type="text" class="form-control mb-2" placeholder="عنوان" wire:model.defer='name'
                             required>
                         @error('name')
                             <div class="alert alert-danger">{{ $message }}</div>

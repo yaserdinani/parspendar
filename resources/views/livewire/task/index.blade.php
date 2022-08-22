@@ -198,7 +198,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6 text-right">
                                 <label for="description">توضیحات</label>
-                                <textarea class="form-control text-right" id="description" wire:model.lazy="description" rows="3" required>   
+                                <textarea class="form-control text-right" id="description" wire:model.defer="description" rows="3" required>   
                                 </textarea>
                                 @error('description')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -206,7 +206,7 @@
                             </div>
                             <div class="form-group col-md-6 text-right">
                                 <label for="name">نام</label>
-                                <input type="text" class="form-control text-right" wire:model.lazy="name"
+                                <input type="text" class="form-control text-right" wire:model.defer="name"
                                     id="name" placeholder="نام" required autocomplete="off">
                                 @error('name')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -217,7 +217,7 @@
                             <div class="form-group col-md-6 text-right">
                                 @can('add-task-for-users')
                                     <label for="users">کاربران</label>
-                                    <select multiple class="form-control" id="users" wire:model.lazy="users">
+                                    <select multiple class="form-control" id="users" wire:model.defer="users">
                                         @foreach ($all_users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach
@@ -226,7 +226,7 @@
                             </div>
                             <div class="form-group col-md-6 text-right">
                                 <label for="role">وضعیت</label>
-                                <select id="role" class="form-control text-right" wire:model.lazy="status">
+                                <select id="role" class="form-control text-right" wire:model.defer="status">
                                     @foreach ($statuses as $status)
                                         <option value="{{ $status->id }}">{{ $status->name }}</option>
                                     @endforeach

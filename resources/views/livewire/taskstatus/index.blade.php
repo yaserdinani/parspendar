@@ -81,7 +81,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6 text-right">
                                 <label for="name">عنوان</label>
-                                <input type="text" class="form-control text-right" wire:model.lazy='name'
+                                <input type="text" class="form-control text-right" wire:model.defer='name'
                                     id="name" placeholder="عنوان" required autocomplete="off">
                                 @error('name')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -89,7 +89,7 @@
                             </div>
                             <div class="form-group col-md-6 text-right">
                                 <label for="color">رنگ</label>
-                                <input type="color" class="form-control text-right" wire:model.lazy='color'
+                                <input type="color" class="form-control text-right" wire:model.defer='color'
                                     id="color" required placeholder="رنگ" autocomplete="off">
                                 @error('color')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -120,7 +120,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6 text-right">
                                 <label for="name">عنوان</label>
-                                <input type="text" class="form-control text-right" wire:model.lazy='name'
+                                <input type="text" class="form-control text-right" wire:model.defer='name'
                                     id="name" placeholder="عنوان" required autocomplete="off">
                                 @error('name')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -128,7 +128,7 @@
                             </div>
                             <div class="form-group col-md-6 text-right">
                                 <label for="color">رنگ</label>
-                                <input type="color" class="form-control text-right" wire:model.lazy='color'
+                                <input type="color" class="form-control text-right" wire:model.defer='color'
                                     id="color" required placeholder="رنگ" autocomplete="off">
                                 @error('color')
                                     <div class="alert alert-danger">{{ $message }}</div>

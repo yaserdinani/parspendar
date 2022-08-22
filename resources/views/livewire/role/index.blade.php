@@ -74,12 +74,12 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent='store'>
-                        <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name'
+                        <input type="text" class="form-control" placeholder="عنوان" wire:model.defer='name'
                             required>
                         @error('name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-                        <select id="role" class="form-control text-right my-2" wire:model.lazy='permissions' multiple
+                        <select id="role" class="form-control text-right my-2" wire:model.defer='permissions' multiple
                             required>
                             @foreach ($all_permissions as $permission)
                                 <option value="{{ $permission->id }}">{{ $permission->name }}</option>
@@ -106,12 +106,12 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent='update'>
-                        <input type="text" class="form-control" placeholder="عنوان" wire:model.lazy='name'
+                        <input type="text" class="form-control" placeholder="عنوان" wire:model.defer='name'
                             required>
                         @error('name')
                             <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-                        <select id="role" class="form-control text-right my-2" wire:model.lazy='permissions' multiple
+                        <select id="role" class="form-control text-right my-2" wire:model.defer='permissions' multiple
                             required>
                             @foreach ($all_permissions as $permission)
                                 <option value="{{ $permission->id }}">{{ $permission->name }}</option>

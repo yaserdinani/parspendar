@@ -101,7 +101,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-6 text-right">
                                         <label for="phone">موبایل</label>
-                                        <input type="tel" class="form-control text-right" wire:model.lazy='phone'
+                                        <input type="tel" class="form-control text-right" wire:model.defer='phone'
                                             id="phone" placeholder="موبایل" required autocomplete="off"
                                             pattern="^(\+98|0)?9\d{9}$">
                                         @error('phone')
@@ -110,7 +110,7 @@
                                     </div>
                                     <div class="form-group col-md-6 text-right">
                                         <label for="name">نام و نام خانوادگی</label>
-                                        <input type="text" class="form-control text-right" wire:model.lazy='name'
+                                        <input type="text" class="form-control text-right" wire:model.defer='name'
                                             id="name" placeholder="نام و نام خانوادگی" required autocomplete="off">
                                         @error('name')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -120,7 +120,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-6 text-right">
                                         <label for="role">نقش</label>
-                                        <select id="role" class="form-control text-right" wire:model.lazy='roles'
+                                        <select id="role" class="form-control text-right" wire:model.defer='roles'
                                             multiple required>
                                             @foreach ($all_roles as $role)
                                                 <option value="{{ $role->id }}">{{ $role->name }}</option>
@@ -132,7 +132,7 @@
                                     </div>
                                     <div class="form-group col-md-6 text-right">
                                         <label for="email">ایمیل</label>
-                                        <input type="email" class="form-control text-right" wire:model.lazy='email'
+                                        <input type="email" class="form-control text-right" wire:model.defer='email'
                                             id="email" placeholder="ایمیل" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,}"
                                             required autocomplete="off">
                                         @error('email')
@@ -144,7 +144,7 @@
                                     <div class="form-group col-md-6 text-right">
                                         <label for="password_confirmation">تکرار رمز عبور</label>
                                         <input type="password" class="form-control text-right"
-                                            wire:model.lazy='password_confirmation' id="password_confirmation"
+                                            wire:model.defer='password_confirmation' id="password_confirmation"
                                             placeholder="تکرار رمز عبور" required autocomplete="off">
                                         @error('password_confirmation')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -153,7 +153,7 @@
                                     <div class="form-group col-md-6 text-right">
                                         <label for="password">رمز عبور</label>
                                         <input type="password" class="form-control text-right"
-                                            wire:model.lazy='password' id="password" placeholder="رمز عبور" required
+                                            wire:model.defer='password' id="password" placeholder="رمز عبور" required
                                             autocomplete="off">
                                         @error('password')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -189,7 +189,7 @@
                                     <div class="form-group col-md-6 text-right">
                                         <label for="phone">موبایل</label>
                                         <input type="tel" class="form-control text-right"
-                                            wire:model.lazy='phone' id="phone" placeholder="موبایل" required
+                                            wire:model.defer='phone' id="phone" placeholder="موبایل" required
                                             autocomplete="off" pattern="^(\+98|0)?9\d{9}$">
                                         @error('phone')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -198,7 +198,7 @@
                                     <div class="form-group col-md-6 text-right">
                                         <label for="name">نام و نام خانوادگی</label>
                                         <input type="text" class="form-control text-right"
-                                            wire:model.lazy='name' id="name" placeholder="نام و نام خانوادگی"
+                                            wire:model.defer='name' id="name" placeholder="نام و نام خانوادگی"
                                             required autocomplete="off">
                                         @error('name')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -209,7 +209,7 @@
                                     <div class="form-group col-md-6 text-right">
                                         <label for="role">نقش</label>
                                         <select id="role" class="form-control text-right"
-                                            wire:model.lazy='roles' multiple required>
+                                            wire:model.defer='roles' multiple required>
                                             @foreach ($all_roles as $role)
                                                 <option value="{{ $role->id }}">{{ $role->name }}</option>
                                             @endforeach
@@ -221,7 +221,7 @@
                                     <div class="form-group col-md-6 text-right">
                                         <label for="email">ایمیل</label>
                                         <input type="email" class="form-control text-right"
-                                            wire:model.lazy='email' id="email" placeholder="ایمیل" required
+                                            wire:model.defer='email' id="email" placeholder="ایمیل" required
                                             autocomplete="off" pattern="[^@]+@[^@]+\.[a-zA-Z]{2,}">
                                         @error('email')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -232,7 +232,7 @@
                                     <div class="form-group col-md-6 text-right">
                                         <label for="password_confirmation">تکرار رمز عبور</label>
                                         <input type="password" class="form-control text-right"
-                                            wire:model.lazy='password_confirmation' id="password_confirmation"
+                                            wire:model.defer='password_confirmation' id="password_confirmation"
                                             placeholder="تکرار رمز عبور" autocomplete="off">
                                         @error('password_confirmation')
                                             <div class="alert alert-danger">{{ $message }}</div>
@@ -241,7 +241,7 @@
                                     <div class="form-group col-md-6 text-right">
                                         <label for="password">رمز عبور</label>
                                         <input type="password" class="form-control text-right"
-                                            wire:model.lazy='password' id="password" placeholder="رمز عبور"
+                                            wire:model.defer='password' id="password" placeholder="رمز عبور"
                                             autocomplete="off">
                                         @error('password')
                                             <div class="alert alert-danger">{{ $message }}</div>
