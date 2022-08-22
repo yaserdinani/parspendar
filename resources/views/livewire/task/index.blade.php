@@ -15,10 +15,101 @@
             </div>
         </div>
     </div>
-    <livewire:task-status-boarder
-    :sortable="true"
-    :sortable-between-statuses="true"
-    />
+    <livewire:task-status-boarder :sortable="true" :sortable-between-statuses="true" />
+    {{-- dynamic table --}}
+    <div class="card-header">
+        <h3>همه‌ی وظایف</h3>
+        <div class="d-flex flex-row">
+            @foreach ($columns as $key => $column)
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="{{ $column['name'] }}" value="{{ $column['flag'] }}"
+                        {{ $column['flag'] ? 'checked' : '' }}
+                        wire:change="$emit('changeColumnFlag',{{ $key }},$event.target.value)">
+                    <label class="form-check-label" for="{{ $column['name'] }}">{{ $column['name'] }}</label>
+                </div>
+            @endforeach
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered text-center" dir="rtl">
+            <thead>
+                <tr>
+                    @foreach ($columns as $key => $column)
+                        @if ($column['flag'])
+                            <th scope="col">{{ $column['name'] }}</th>
+                        @endif
+                    @endforeach
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($tasks as $task)
+                    <tr>
+                        @foreach ($columns as $key => $column)
+                            @if($column["flag"])
+                                <td>{{$task[$column["name"].""]}}</td>
+                            @endif
+                        @endforeach
+                    </tr>
+                    {{-- <tr>
+                        <th scope="row">{{ $task->id }}</th>
+                        <td class="text-right">{{ $task->name }}</td>
+                        <td class="text-right">{{ $task->description }}</td>
+                        <td>
+                            <select class="form-control"
+                                wire:change="$emit('updateTaskStatus',{{ $task->id }},$event.target.value)">
+                                @foreach ($statuses as $status)
+                                    <option value="{{ $status->id }}"
+                                        {{ $status->id == $task->task_status_id ? 'selected="selected"' : '' }}>
+                                        {{ $status->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td class="text-right">
+                            {{ \Morilog\Jalali\Jalalian::forge($task->started_at)->format('%A %d %B %Y') }}
+                        </td>
+                        <td class="text-right">
+                            {{ \Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y') }}
+                        </td>
+                        <td>
+                            {{ Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first()->time_spent ?? 0 }}
+                            ثانیه
+                        </td>
+                        <td>
+                            @if (Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first())
+                                <i class="fa fa-pause-circle" style="cursor: pointer;"
+                                    onclick="pause({{ $task->id }})"></i>
+                                <span id="time.task.{{ $task->id }}">
+                                    0
+                                </span>
+                                <i class="fa fa-play-circle" style="cursor: pointer;"
+                                    onclick="play({{ $task->id }})"></i>
+                            @else
+                                <span>مجری نیستید</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('livewire.comments.index', $task) }}"
+                                class="btn btn-sm btn-info">مشاهده</a>
+                        </td>
+                        @can('task-edit')
+                            <td>
+                                <a data-toggle="modal" data-target="#updateModal" class="btn btn-sm btn-warning"
+                                    wire:click="setCurrentTask({{ $task }})">ویرایش</a>
+                            </td>
+                        @endcan
+                        @can('task-delete')
+                            <td>
+                                <a data-toggle="modal" data-target="#deleteModal" class="btn btn-sm btn-danger"
+                                    wire:click="setCurrentTask({{ $task }})">حذف</a>
+                            </td>
+                        @endcan
+                    </tr> --}}
+                @endforeach
+            </tbody>
+        </table>
+        {{ $tasks->links() }}
+    </div>
+    {{-- end dynamic table --}}
     <div class="card-header">
         <h3>همه‌ی وظایف</h3>
         <div class="d-flex flex-row-reverse">
@@ -86,19 +177,20 @@
                             {{ \Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y') }}
                         </td>
                         <td>
-                            {{ Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first()->time_spent ?? 0 }} ثانیه
+                            {{ Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first()->time_spent ?? 0 }}
+                            ثانیه
                         </td>
                         <td>
-                            @if(Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first())
-                            <i class="fa fa-pause-circle" style="cursor: pointer;"
-                                onclick="pause({{ $task->id }})"></i>
-                            <span id="time.task.{{ $task->id }}">
-                                0
-                            </span>
-                            <i class="fa fa-play-circle" style="cursor: pointer;"
-                                onclick="play({{ $task->id }})"></i>
+                            @if (Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first())
+                                <i class="fa fa-pause-circle" style="cursor: pointer;"
+                                    onclick="pause({{ $task->id }})"></i>
+                                <span id="time.task.{{ $task->id }}">
+                                    0
+                                </span>
+                                <i class="fa fa-play-circle" style="cursor: pointer;"
+                                    onclick="play({{ $task->id }})"></i>
                             @else
-                            <span>مجری نیستید</span>
+                                <span>مجری نیستید</span>
                             @endif
                         </td>
                         <td>
@@ -327,7 +419,7 @@
 
         function pause(id) {
             var span = document.getElementById("time.task." + id);
-            Livewire.emit('setSpentTime',id,span.innerHTML)
+            Livewire.emit('setSpentTime', id, span.innerHTML)
             clearInterval(intervals[id])
             span.innerHTML = 0
         }

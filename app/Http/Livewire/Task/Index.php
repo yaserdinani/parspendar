@@ -11,6 +11,7 @@ use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use App\Events\TaskCreate;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class Index extends Component
 {
@@ -40,8 +41,9 @@ class Index extends Component
     public $filter_finished_time;
     public $spent_time;
     public $task_status_updated_flag;
+    public $columns = [];
 
-    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt","setSpentTime","taskStatusUpdated"];
+    protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt","setSpentTime","taskStatusUpdated","changeColumnFlag"];
 
     public function resetInputs(){
         $this->current_task = null;
@@ -59,6 +61,10 @@ class Index extends Component
         $this->task_status_updated_flag = true;
     }
 
+    public function changeColumnFlag($key,$value){
+        $this->columns[$key]["flag"] = !$value;
+    }
+
     public function updateTaskStatus(Task $task,$value){
         abort_unless(auth()->user()->can('change-task-status'), '403', 'Unauthorized.');
         $task->update([
@@ -73,6 +79,16 @@ class Index extends Component
         }
         $this->statuses = TaskStatus::all();
         $this->users = [auth()->user()->id];
+        $columns = DB::getSchemaBuilder()->getColumnListing('tasks');
+        // dd(DB::getSchemaBuilder()->getColumnListing('tasks'));
+        // dd($this->columns);
+        foreach ($columns as $column){
+            array_push($this->columns,[
+                "name"=>$column,
+                "flag"=>true
+            ]);
+        }
+        // dd($this->columns);
     }
     
     public function setCurrentTask(Task $task){
