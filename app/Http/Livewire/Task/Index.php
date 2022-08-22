@@ -150,7 +150,7 @@ class Index extends Component
     {
         abort_unless(auth()->user()->can('task-list'), '403', 'Unauthorized.');
         if(auth()->user()->can('see-all-tasks')){
-            if($this->filter_type ==0){
+            if($this->filter_type ==0 && $this->filter_text==""){
                 $tasks = Task::paginate(5);
                 $this->filter_text = "";
                 $this->filter_finished_at = null;
@@ -178,7 +178,7 @@ class Index extends Component
             }
         }
         else{
-            if($this->filter_type ==0){
+            if($this->filter_type ==0 && $this->filter_text==""){
                 $this->filter_text = "";
                 $this->filter_finished_at = null;
                 $this->filter_started_time = null;
