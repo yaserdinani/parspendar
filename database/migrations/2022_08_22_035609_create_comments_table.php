@@ -20,7 +20,7 @@ class CreateCommentsTable extends Migration
             $table->id();
             $table->foreignIdFor(Comment::class)->nullable();
             $table->foreignIdFor(User::class);
-            $table->foreignIdFor(Table::class);
+            $table->foreignIdFor(Task::class);
             $table->string('description');
             $table->timestamps();
         });
