@@ -1,6 +1,6 @@
 @section('title', 'همه‌ی وظایف')
 <div class="card">
-    <div wire:loading>
+    <div wire:loading.delay>
         <div
             style="background-color:#000;display:flex;justify-content:center;align-items:center;position:fixed;top:0px;left:0px;width:100%;height:100%;opacity:0.4;z-index:9999;">
             <div class="la-ball-spin-clockwise">

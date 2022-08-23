@@ -18,18 +18,24 @@ class Index extends Component
     public $description;
     public $users;
     public $mention_list = [];
+    public $text_mention_list = [];
+    public $showUsersFlag = false;
 
     protected $rules = [
         "description" =>["required","min:3","max:200","string"],
         "mention_list"=>["exists:users,id"]
     ];
 
-    protected $listeners = ["commentAdded"];
+    protected $listeners = ["commentAdded","userChoosed"];
 
     public function mount(Task $task){
         $this->task = $task;
         $this->comments = $task->comments;
         $this->users = User::all();
+    }
+
+    public function userChoosed($value){
+        dd($value);
     }
 
     public function resetInputs(){
@@ -53,6 +59,18 @@ class Index extends Component
     public function commentAdded(){
         $this->comments = $this->task->comments;
     }
+
+    // public function updatedDescription($value){
+    //     preg_match_all("/@([\w\-]*)/",$value,$matches);
+    //     $this->text_mention_list = $matches[1];
+    //     if(count($matches[1])==0){
+    //         $this->showUsersFlag = false;
+    //     }
+    //     else{
+    //         $this->showUsersFlag = true;
+    //     }
+        
+    // }
 
     public function render()
     {

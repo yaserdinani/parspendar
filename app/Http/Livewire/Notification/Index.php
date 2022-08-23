@@ -13,6 +13,7 @@ class Index extends Component
 
     public $filter_text;
     public $current_notification;
+    protected $paginationTheme = 'bootstrap';
 
     protected $listeners = ["seenNotification"];
 

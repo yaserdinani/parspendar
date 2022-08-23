@@ -1,6 +1,6 @@
 @section('title', 'نظرات')
 <div class="card">
-    <div wire:loading>
+    <div wire:loading.delay>
         <div
             style="background-color:#000;display:flex;justify-content:center;align-items:center;position:fixed;top:0px;left:0px;width:100%;height:100%;opacity:0.4;z-index:9999;">
             <div class="la-ball-spin-clockwise">
@@ -22,6 +22,15 @@
         <form wire:submit.prevent='store' class="mb-3">
             <div class="form-row">
                 <div class="form-group col-md-6 text-right">
+                    {{-- @if ($showUsersFlag)
+                        <label for="mention_list">منشن کاربران</label>
+                        <select class="form-control" wire:model.defer="mention_list" id="mention_list"
+                            multiple="multiple" wire:change='userChoosed($event.target.value)'>
+                            @foreach ($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    @endif --}}
                     <label for="mention_list">منشن کاربران</label>
                     <select class="form-control" wire:model.defer="mention_list" id="mention_list" multiple="multiple">
                         @foreach ($users as $user)
@@ -36,6 +45,9 @@
                     @error('description')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
+                    @foreach ($text_mention_list as $key => $value)
+                        {{ $key }}{{ $value }}
+                    @endforeach
                 </div>
             </div>
             <button type="submit" class="btn btn-outline-primary">ثبت یادداشت</button>
