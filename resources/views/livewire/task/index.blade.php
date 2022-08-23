@@ -178,6 +178,7 @@
                         </td>
                         <td>
                             {{ Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first()->time_spent ?? 0 }}
+                            {{-- {{ Carbon\CarbonInterval::seconds(Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first()->time_spent)->cascade()->forHumans()}} --}}
                             ثانیه
                         </td>
                         <td>
