@@ -16,6 +16,7 @@ class Task extends Model
         'task_status_id',
         'started_at',
         'finished_at',
+        'position'
     ];
 
     public function users(){

@@ -25,7 +25,7 @@ class Index extends Component
     public $users = [];
     public $started_at;
     public $finished_at;
-    public $status;
+    public $status=1;
     public $statuses;
     public $all_users;
     public $start_time;
@@ -52,7 +52,7 @@ class Index extends Component
         $this->users = [auth()->user()->id];
         $this->started_at = null;
         $this->finished_at = null;
-        $this->status = null;
+        $this->status = 1;
         $this->start_time = null;
         $this->finish_time = null;
         $this->resetValidation();
@@ -80,15 +80,12 @@ class Index extends Component
         $this->statuses = TaskStatus::all();
         $this->users = [auth()->user()->id];
         $columns = DB::getSchemaBuilder()->getColumnListing('tasks');
-        // dd(DB::getSchemaBuilder()->getColumnListing('tasks'));
-        // dd($this->columns);
         foreach ($columns as $column){
             array_push($this->columns,[
                 "name"=>$column,
                 "flag"=>true
             ]);
         }
-        // dd($this->columns);
     }
     
     public function setCurrentTask(Task $task){
@@ -105,6 +102,12 @@ class Index extends Component
 
     public function delete(){
         abort_unless(auth()->user()->can('task-delete'), '403', 'Unauthorized.');
+        TaskStatus::find($this->currentTask->task_status_id)
+        ->tasks()
+        ->where("position",">",$this->currentTask->position)
+        ->update([
+            "position" => DB::raw("position-1")
+        ]);
         $this->currentTask->delete();
         $this->resetInputs();
         $this->alert('success', 'وظیفه به سطل زباله انتقال یافت');
@@ -114,7 +117,6 @@ class Index extends Component
         abort_unless(auth()->user()->can('task-create'), '403', 'Unauthorized.');
         $this->started_at = Carbon::parse($this->started_at);
         $this->finished_at = Carbon::parse($this->finished_at);
-
         $validateData = $this->validate([
             "name"=>["required", "min:3","max:30"],
             "status"=>["required", "exists:task_statuses,id"],
@@ -123,13 +125,14 @@ class Index extends Component
             "description"=>["min:10","max:200"],
             "users"=>["exists:users,id"],
         ]);
-
+        $position = TaskStatus::find($this->status)->tasks()->max("position") + 1;
         $task = Task::create([
             "name"=>$this->name,
             "task_status_id"=>$this->status,
             "description"=>$this->description,
             "started_at"=>$this->started_at,
             "finished_at"=>$this->finished_at,
+            "position"=> $position,
         ]);
         $task->users()->sync($this->users);
         event(new TaskCreate($task));
