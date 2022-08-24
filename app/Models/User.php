@@ -82,4 +82,8 @@ class User extends Authenticatable implements JWTSubject
     public function mentionComments(){
         return $this->belongsToMany(Comment::class,'comment_user');
     }
+
+    public function columns(){
+        return $this->belongsToMany(Column::class);
+    }
 }
