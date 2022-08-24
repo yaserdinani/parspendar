@@ -45,8 +45,8 @@
                 @foreach ($tasks as $task)
                     <tr>
                         @foreach ($columns as $key => $column)
-                            @if($column["flag"])
-                                <td>{{$task[$column["name"].""]}}</td>
+                            @if ($column['flag'])
+                                <td>{{ $task[$column['name'] . ''] }}</td>
                             @endif
                         @endforeach
                     </tr>
@@ -408,8 +408,15 @@
 @push('scripts')
     <script type="text/javascript" defer>
         var intervals = []
+        const beforeUnloadListener = (event) => {
+            event.preventDefault();
+            return event.returnValue = "Are you sure you want to exit?";
+        };
 
         function play(id) {
+            addEventListener("beforeunload", beforeUnloadListener, {
+                capture: true
+            });
             var span = document.getElementById("time.task." + id);
             var counter = 1;
             intervals[id] = setInterval(function() {
@@ -417,7 +424,6 @@
                 counter++
             }, 1000)
         }
-
         function pause(id) {
             var span = document.getElementById("time.task." + id);
             Livewire.emit('setSpentTime', id, span.innerHTML)

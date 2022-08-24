@@ -16,6 +16,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ asset('assets/font-awesome/css/font-awesome.min.css') }}">
     @livewireStyles
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         .tasks-container-header {
             background-color: orange;
@@ -390,6 +391,11 @@
             .listen('MentionComment', (e) =>
                 Livewire.emitTo('notification', 'refreshNotification')
             );
+    </script>
+    <script type="text/javascript">
+        // window.onbeforeunload = function() {
+        //     return 'لطفا از ذخیره شدن داده های خود اطمینان حاصل کنید';
+        // }
     </script>
 </body>
 
