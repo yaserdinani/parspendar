@@ -30,6 +30,9 @@ Route::group(["middleware"=>"auth"],function(){
     Route::get('/livewire/permissions',App\Http\Livewire\Permission\Index::class)->name('livewire.permissions.index');
     Route::get('/livewire/calender',App\Http\Livewire\Calender\Index::class)->name('livewire.calenders.index');
     Route::get('/livewire/notifications',App\Http\Livewire\Notification\Index::class)->name('livewire.notifications.index');
+    Route::get('/livewire/tables',App\Http\Livewire\Table\Index::class)->name('livewire.tables.index');
+    Route::get('/livewire/columns',App\Http\Livewire\Column\Index::class)->name('livewire.columns.index');
+    Route::get('/livewire/column-types',App\Http\Livewire\ColumnType\Index::class)->name('livewire.column.types.index');
     Route::get('/livewire/comments/{task}',App\Http\Livewire\Comment\Index::class)->name('livewire.comments.index');
 });
 

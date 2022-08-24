@@ -25,10 +25,28 @@
                 </li>
             @endcan
             @can('permission-list')
-            <li
-                class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.permissions.index' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('livewire.permissions.index') }}">دسترسی‌ها</a>
-            </li>
+                <li
+                    class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.permissions.index' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('livewire.permissions.index') }}">دسترسی‌ها</a>
+                </li>
+            @endcan
+            @can('table-list')
+                <li
+                    class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.tables.index' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('livewire.tables.index') }}">جداول</a>
+                </li>
+            @endcan
+            @can('column-list')
+                <li
+                    class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.columns.index' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('livewire.columns.index') }}">ستون‌ها</a>
+                </li>
+            @endcan
+            @can('column-types-list')
+                <li
+                    class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.column.types.index' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('livewire.column.types.index') }}">نوع ستون‌ها</a>
+                </li>
             @endcan
             <li
                 class="nav-item {{ Illuminate\Support\Facades\Request::route()->getName() == 'livewire.calenders.index' ? 'active' : '' }}">
