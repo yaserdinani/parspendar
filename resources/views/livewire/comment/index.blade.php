@@ -21,36 +21,27 @@
     <div class="card-body">
         <form wire:submit.prevent='store' class="mb-3">
             <div class="form-row">
-                <div class="form-group col-md-6 text-right">
-                    {{-- @if ($showUsersFlag)
-                        <label for="mention_list">منشن کاربران</label>
-                        <select class="form-control" wire:model.defer="mention_list" id="mention_list"
-                            multiple="multiple" wire:change='userChoosed($event.target.value)'>
+                <div class="form-group col-12 text-right">
+                    <label for="description">متن یادداشت</label>
+                    <textarea rows="5" class="form-control text-right" wire:model='description' id="description" required
+                        autocomplete="off" style="text-direction:rtl;">
+                    </textarea>
+                    @if ($showUsersFlag)
+                        <select class="form-control col-md-2 mx-2" style="margin-top:-6%;" wire:model.defer="mention_list" id="mention_list" wire:change='userChoosed($event.target.value)'>
+                            <option value="0">انتخاب کنید</option>
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
-                    @endif --}}
-                    <label for="mention_list">منشن کاربران</label>
-                    <select class="form-control" wire:model.defer="mention_list" id="mention_list" multiple="multiple">
-                        @foreach ($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="form-group col-md-6 text-right">
-                    <label for="description">متن یادداشت</label>
-                    <textarea rows="3" class="form-control text-right" wire:model.defer='description' id="description" required
-                        autocomplete="off"></textarea>
+                    @endif
                     @error('description')
                         <div class="alert alert-danger">{{ $message }}</div>
                     @enderror
-                    @foreach ($text_mention_list as $key => $value)
-                        {{ $key }}{{ $value }}
-                    @endforeach
                 </div>
             </div>
-            <button type="submit" class="btn btn-outline-primary">ثبت یادداشت</button>
+            @if (!$showUsersFlag)
+            <button type="submit mt-3" class="btn btn-outline-primary">ثبت یادداشت</button>
+            @endif
         </form>
         <hr>
         <h2 class="text-center my-3">یادداشت ها</h2>
