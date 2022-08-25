@@ -5,11 +5,11 @@
     @if($recordClickEnabled)
         wire:click="onRecordClick('{{ $record['id'] }}')"
     @endif
-    class="{{ $styles['record'] }}">
+    class="{{ $styles['record'] }}"
+    style="cursor: pointer;">
 
     @include($recordContentView, [
         'record' => $record,
         'styles' => $styles,
     ])
-
 </div>

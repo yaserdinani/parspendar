@@ -21,7 +21,7 @@
         <h3>همه‌ی وظایف</h3>
         <div class="d-flex flex-row-reverse">
             <div>
-                <a data-toggle="modal" data-target="#createModal" class="btn btn-success mx-1">افزودن</a>
+                <a data-toggle="modal" data-target="#createModal" class="btn btn-success mx-1">افزودن وظیفه</a>
             </div>
             <div>
                 <a data-toggle="modal" data-target="#tableModal" class="btn btn-secondary mx-1"
