@@ -67,7 +67,7 @@
                                                 wire:change="$emit('updateTaskStatus',{{ $task->id }},$event.target.value)">
                                                 @foreach (\Illuminate\Support\Facades\DB::table($value->selectTable->name)->get() as $status)
                                                     <option value="{{ $status->id }}"
-                                                        {{ $status->id == \Illuminate\Support\Facades\DB::table($value->selectTable->name)->where('id', $task->task_status_id)->first()->id ? 'selected="selected"' : '' }}>
+                                                        {{ $status->id ==\Illuminate\Support\Facades\DB::table($value->selectTable->name)->where('id', $task->task_status_id)->first()->id? 'selected="selected"': '' }}>
                                                         {{ $status->name }}</option>
                                                 @endforeach
                                             </select>
@@ -448,21 +448,26 @@
         };
 
         function play(id) {
-            addEventListener("beforeunload", beforeUnloadListener, {
-                capture: true
-            });
-            var span = document.getElementById("time.task." + id);
-            var counter = 1;
-            intervals[id] = setInterval(function() {
-                span.innerHTML = counter
-                counter++
-            }, 1000)
+            if (intervals.includes(intervals[id])) {
+                pause(id);
+            } else {
+                addEventListener("beforeunload", beforeUnloadListener, {
+                    capture: true
+                });
+                var span = document.getElementById("time.task." + id);
+                var counter = 1;
+                intervals[id] = setInterval(function() {
+                    span.innerHTML = counter
+                    counter++
+                }, 1000)
+            }
         }
 
         function pause(id) {
             var span = document.getElementById("time.task." + id);
             Livewire.emit('setSpentTime', id, span.innerHTML)
             clearInterval(intervals[id])
+            intervals[id] = null;
             span.innerHTML = 0
         }
         $(document).ready(function() {
