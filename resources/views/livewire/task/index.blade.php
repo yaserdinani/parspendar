@@ -17,59 +17,67 @@
     </div>
     <livewire:task-status-boarder :sortable="true" :sortable-between-statuses="true" />
     {{-- dynamic table --}}
-    <div class="card-header">
+    <div class="card-header mt-2">
         <h3>همه‌ی وظایف</h3>
-        <div class="d-flex flex-row">
-            @foreach ($columns as $key => $column)
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" id="{{ $column['name'] }}" value="{{ $column['flag'] }}"
-                        {{ $column['flag'] ? 'checked' : '' }}
-                        wire:change="$emit('changeColumnFlag',{{ $key }},$event.target.value)">
-                    <label class="form-check-label" for="{{ $column['name'] }}">{{ $column['name'] }}</label>
-                </div>
-            @endforeach
+        <div class="d-flex flex-row-reverse">
+            <div>
+                <a data-toggle="modal" data-target="#createModal" class="btn btn-success mx-1">افزودن</a>
+            </div>
+            <div>
+                <a data-toggle="modal" data-target="#tableModal" class="btn btn-secondary mx-1"
+                    wire:click="getTableInfo">شخصی سازی جدول</a>
+            </div>
         </div>
     </div>
     <div class="card-body">
         <table class="table table-bordered text-center" dir="rtl">
             <thead>
                 <tr>
-                    @foreach ($columns as $key => $column)
-                        @if ($column['flag'])
-                            <th scope="col">{{ $column['name'] }}</th>
-                        @endif
+                    @foreach (auth()->user()->columns as $key => $value)
+                        <th scope="col">{{ $value->name }}</th>
                     @endforeach
+                    <th scope="col">زمان صرف شده</th>
+                    <th scope="col">تایمر</th>
+                    <th scope="col">نظرات</th>
+                    @can('task-edit')
+                        <th scope="col">ویرایش</th>
+                    @endcan
+                    @can('task-delete')
+                        <th scope="col">حذف</th>
+                    @endcan
                 </tr>
             </thead>
             <tbody>
                 @foreach ($tasks as $task)
                     <tr>
-                        @foreach ($columns as $key => $column)
-                            @if ($column['flag'])
-                                <td>{{ $task[$column['name'] . ''] }}</td>
-                            @endif
+                        @foreach (auth()->user()->columns as $key => $value)
+                            <td scope="col">
+                                @switch ($value->columnType->name)
+                                    @case('string')
+                                        {{ $task[$value->name] }}
+                                    @break
+
+                                    @case('datetime')
+                                        {{ \Morilog\Jalali\Jalalian::forge($task[$value->name])->format('%A %d %B %Y') }}
+                                    @break
+
+                                    @case('integer')
+                                        @if ($value->select_table_id !== null)
+                                            <select class="form-control"
+                                                wire:change="$emit('updateTaskStatus',{{ $task->id }},$event.target.value)">
+                                                @foreach (\Illuminate\Support\Facades\DB::table($value->selectTable->name)->get() as $status)
+                                                    <option value="{{ $status->id }}"
+                                                        {{ $status->id == \Illuminate\Support\Facades\DB::table($value->selectTable->name)->where('id', $task->task_status_id)->first()->id ? 'selected="selected"' : '' }}>
+                                                        {{ $status->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            {{ $task[$value->name] }}
+                                        @endif
+                                    @break
+                                @endswitch
+                            </td>
                         @endforeach
-                    </tr>
-                    {{-- <tr>
-                        <th scope="row">{{ $task->id }}</th>
-                        <td class="text-right">{{ $task->name }}</td>
-                        <td class="text-right">{{ $task->description }}</td>
-                        <td>
-                            <select class="form-control"
-                                wire:change="$emit('updateTaskStatus',{{ $task->id }},$event.target.value)">
-                                @foreach ($statuses as $status)
-                                    <option value="{{ $status->id }}"
-                                        {{ $status->id == $task->task_status_id ? 'selected="selected"' : '' }}>
-                                        {{ $status->name }}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td class="text-right">
-                            {{ \Morilog\Jalali\Jalalian::forge($task->started_at)->format('%A %d %B %Y') }}
-                        </td>
-                        <td class="text-right">
-                            {{ \Morilog\Jalali\Jalalian::forge($task->finished_at)->format('%A %d %B %Y') }}
-                        </td>
                         <td>
                             {{ Illuminate\Support\Facades\DB::table('task_user')->where([['user_id', auth()->user()->id], ['task_id', $task->id]])->first()->time_spent ?? 0 }}
                             ثانیه
@@ -103,7 +111,7 @@
                                     wire:click="setCurrentTask({{ $task }})">حذف</a>
                             </td>
                         @endcan
-                    </tr> --}}
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -215,6 +223,32 @@
             </tbody>
         </table>
         {{ $tasks->links() }}
+    </div>
+    {{-- change table modal --}}
+    <div wire:ignore.self class="modal fade" id="tableModal" tabindex="-1" role="dialog"
+        aria-labelledby="tableModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tableModalLabel">شخصی سازی جدول</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form wire:submit.prevent='changeTable'>
+                        <select id="columns" rows="5" class="form-control text-right my-2"
+                            wire:model.defer='my_columns' multiple required>
+                            @foreach ($columns as $column)
+                                <option value="{{ $column->id }}">{{ $column->name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">لغو</button>
+                        <button type="submit" class="btn btn-outline-primary">ثبت</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
     {{-- create modal --}}
     <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
@@ -424,6 +458,7 @@
                 counter++
             }, 1000)
         }
+
         function pause(id) {
             var span = document.getElementById("time.task." + id);
             Livewire.emit('setSpentTime', id, span.innerHTML)

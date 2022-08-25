@@ -6,6 +6,8 @@ use Livewire\Component;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
+use App\Models\Column;
+use App\Models\Table;
 use Carbon\Carbon;
 use Livewire\WithPagination;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -41,7 +43,9 @@ class Index extends Component
     public $filter_finished_time;
     public $spent_time;
     public $task_status_updated_flag;
-    public $columns = [];
+    public $columns;
+    public Table $table;
+    public $my_columns;
 
     protected $listeners = ["taskAdded","taskChanged","taskRemoved","setStartedAt","setFinishedAt","updateTaskStatus","setFilterFinishedAt","setFilterStartedAt","setSpentTime","taskStatusUpdated","changeColumnFlag"];
 
@@ -61,10 +65,6 @@ class Index extends Component
         $this->task_status_updated_flag = true;
     }
 
-    public function changeColumnFlag($key,$value){
-        $this->columns[$key]["flag"] = !$value;
-    }
-
     public function updateTaskStatus(Task $task,$value){
         abort_unless(auth()->user()->can('change-task-status'), '403', 'Unauthorized.');
         $task->update([
@@ -79,13 +79,8 @@ class Index extends Component
         }
         $this->statuses = TaskStatus::all();
         $this->users = [auth()->user()->id];
-        $columns = DB::getSchemaBuilder()->getColumnListing('tasks');
-        foreach ($columns as $column){
-            array_push($this->columns,[
-                "name"=>$column,
-                "flag"=>true
-            ]);
-        }
+        $this->table = Table::where('name','tasks')->first();
+        $this->columns = $this->table->columns;
     }
     
     public function setCurrentTask(Task $task){
@@ -261,5 +256,15 @@ class Index extends Component
             "time_spent"=>$time_spent + $value
         ]);
         $this->alert('success', 'زمان شما ثبت شد');
+    }
+    
+
+    public function getTableInfo(){
+        $this->my_columns = auth()->user()->columns()->where("table_id",$this->table->id)->get()->pluck('id');
+    }
+
+    public function changeTable(){
+        auth()->user()->columns()->sync($this->my_columns);
+        $this->alert('success', 'جدول ویرایش شد');
     }
 }

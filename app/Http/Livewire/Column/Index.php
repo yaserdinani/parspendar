@@ -25,7 +25,7 @@ class Index extends Component
 
     protected $rules = [
         "table_id" => ["required","exists:tables,id"],
-        "name" => ["required","min:3","max:30","string"],
+        "name" => ["required","min:2","max:30","string"],
         "column_type_id" => ["required","exists:column_types,id"],
     ];
 
@@ -41,7 +41,11 @@ class Index extends Component
     }
 
     public function resetInputs(){
-        $this->reset();
+        $this->current_column = null;
+        $this->table_id = null;
+        $this->name = null;
+        $this->column_type_id = null;
+        $this->select_table_id = null;
     }
 
     public function setCurrentColumn(Column $column){
@@ -55,7 +59,12 @@ class Index extends Component
     public function store(){
         abort_unless(auth()->user()->can('column-create'), '403', 'Unauthorized.');
         $validateData = $this->validate();
-        Column::create($validateData);
+        Column::create([
+            "name" => $this->name,
+            "table_id" => $this->table_id,
+            "column_type_id"=>$this->column_type_id,
+            "select_table_id"=>$this->select_table_id
+        ]);
         $this->alert('success', 'ستون با موفقیت ایجاد شد');
         $this->resetInputs();
     }
@@ -63,7 +72,12 @@ class Index extends Component
     public function update(){
         abort_unless(auth()->user()->can('column-update'), '403', 'Unauthorized.');
         $validateData = $this->validate();
-        $this->current_column->update($validateData);
+        $this->current_column->update([
+            "name" => $this->name,
+            "table_id" => $this->table_id,
+            "column_type_id"=>$this->column_type_id,
+            "select_table_id"=>$this->select_table_id
+        ]);
         $this->alert('success', 'ستون با موفقیت ویرایش شد');
         $this->resetInputs();
     }

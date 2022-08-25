@@ -89,7 +89,7 @@
                             <div class="form-group col-md-6 text-right">
                                 <label for="table_id">جدول</label>
                                 <select id="table_id" class="form-control text-right" wire:model.defer="table_id">
-                                    <option value="null" selected>ندارد</option>
+                                    <option value="0">ندارد</option>
                                     @foreach ($tables as $table)
                                         <option value="{{ $table->id }}">{{ $table->name }}</option>
                                     @endforeach
@@ -112,7 +112,7 @@
                                 <label for="select_table_id">جدول وابسته</label>
                                 <select id="select_table_id" class="form-control text-right"
                                     wire:model.defer="select_table_id">
-                                    <option value="null" selected>ندارد</option>
+                                    <option value="0">ندارد</option>
                                     @foreach ($tables as $table)
                                         <option value="{{ $table->id }}">{{ $table->name }}</option>
                                     @endforeach
@@ -125,6 +125,7 @@
                                 <label for="column_type_id">نوع ستون</label>
                                 <select id="column_type_id" class="form-control text-right"
                                     wire:model.defer="column_type_id">
+                                    <option value="0">ندارد</option>
                                     @foreach ($column_types as $column_type)
                                         <option value="{{ $column_type->id }}">{{ $column_type->name }}</option>
                                     @endforeach
@@ -159,7 +160,7 @@
                             <div class="form-group col-md-6 text-right">
                                 <label for="table_id">جدول</label>
                                 <select id="table_id" class="form-control text-right" wire:model.defer="table_id">
-                                    <option value="null" selected>ندارد</option>
+                                    <option value="0">ندارد</option>
                                     @foreach ($tables as $table)
                                         <option value="{{ $table->id }}">{{ $table->name }}</option>
                                     @endforeach
@@ -182,7 +183,7 @@
                                 <label for="select_table_id">جدول وابسته</label>
                                 <select id="select_table_id" class="form-control text-right"
                                     wire:model.defer="select_table_id">
-                                    <option value="null" selected>ندارد</option>
+                                    <option value="0">ندارد</option>
                                     @foreach ($tables as $table)
                                         <option value="{{ $table->id }}">{{ $table->name }}</option>
                                     @endforeach
@@ -195,6 +196,7 @@
                                 <label for="column_type_id">نوع ستون</label>
                                 <select id="column_type_id" class="form-control text-right"
                                     wire:model.defer="column_type_id">
+                                    <option value="0">ندارد</option>
                                     @foreach ($column_types as $column_type)
                                         <option value="{{ $column_type->id }}">{{ $column_type->name }}</option>
                                     @endforeach
